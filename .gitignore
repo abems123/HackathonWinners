@@ -10,3 +10,4 @@ output/
 .coverage
 htmlcov/
 tools/*.exe
+*.bundle
