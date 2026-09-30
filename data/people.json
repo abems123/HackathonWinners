@@ -1,0 +1,120 @@
+[
+  {
+    "id": "p-sofie",
+    "name": "Sofie Claes",
+    "role": "Payroll Operations Lead",
+    "team": "Payroll Operations BE",
+    "country": "BE",
+    "expertise": [
+      "payroll input",
+      "payroll calendar",
+      "payslips",
+      "procedures"
+    ],
+    "active": true,
+    "email": "sofie.claes@example.com"
+  },
+  {
+    "id": "p-pieter",
+    "name": "Pieter Janssens",
+    "role": "Senior Payroll Consultant",
+    "team": "Payroll Consultants BE",
+    "country": "BE",
+    "expertise": [
+      "mysdworx migration",
+      "Brouwerij De Kroon"
+    ],
+    "active": true,
+    "email": "pieter.janssens@example.com"
+  },
+  {
+    "id": "p-lien",
+    "name": "Lien Wouters",
+    "role": "Team Lead Payroll Consultants",
+    "team": "Payroll Consultants BE",
+    "country": "BE",
+    "expertise": [
+      "client handover",
+      "onboarding",
+      "absences"
+    ],
+    "active": true,
+    "email": "lien.wouters@example.com"
+  },
+  {
+    "id": "p-nora",
+    "name": "Nora El Amrani",
+    "role": "Payroll Consultant",
+    "team": "Payroll Consultants BE",
+    "country": "BE",
+    "expertise": [
+      "payroll processing"
+    ],
+    "active": true,
+    "email": "nora.elamrani@example.com"
+  },
+  {
+    "id": "p-jens",
+    "name": "Jens Wuyts",
+    "role": "Payroll Consultant",
+    "team": "Payroll Consultants BE",
+    "country": "BE",
+    "expertise": [
+      "payroll processing",
+      "Garage Verhaeghe"
+    ],
+    "active": true,
+    "email": "jens.wuyts@example.com"
+  },
+  {
+    "id": "p-marc",
+    "name": "Marc Peeters",
+    "role": "Payroll Consultant",
+    "team": "Payroll Consultants BE",
+    "country": "BE",
+    "expertise": [
+      "client handover"
+    ],
+    "active": false,
+    "left_on": "2024-02-29",
+    "email": null
+  },
+  {
+    "id": "p-daan",
+    "name": "Daan de Vries",
+    "role": "Payroll Process Owner",
+    "team": "Payroll Operations NL",
+    "country": "NL",
+    "expertise": [
+      "payroll input",
+      "procedures"
+    ],
+    "active": true,
+    "email": "daan.devries@example.com"
+  },
+  {
+    "id": "p-anne",
+    "name": "Anne Muller",
+    "role": "Payroll Specialist",
+    "team": "Payroll Operations LU",
+    "country": "LU",
+    "expertise": [
+      "Luxembourg payroll",
+      "payroll input"
+    ],
+    "active": true,
+    "email": "anne.muller@example.com"
+  },
+  {
+    "id": "p-tom",
+    "name": "Tom Maes",
+    "role": "Finance Process Owner",
+    "team": "Finance BE",
+    "country": "BE",
+    "expertise": [
+      "expense claims"
+    ],
+    "active": true,
+    "email": "tom.maes@example.com"
+  }
+]

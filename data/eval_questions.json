@@ -1,0 +1,182 @@
+{
+  "demo_date": "2026-09-30",
+  "questions": [
+    {
+      "id": "Q1",
+      "purpose": "Main demo: stale doc, wrong country, client-specific chat",
+      "question": "What is the payroll input deadline for Belgian clients?",
+      "context": {
+        "country": "BE",
+        "client": null
+      },
+      "expected_answer": "17:00 on the 5th working day of the month after the pay month (e.g. Wed 7 Oct 2026 for September).",
+      "confidence": "high",
+      "trusted_sources": [
+        "BE-PAY-PROC-001",
+        "BE-PAY-CAL-2026"
+      ],
+      "sources_to_flag": [
+        {
+          "id": "BE-PAY-CHK-2022",
+          "reason": "Outdated: says 3rd working day, no owner, last edited 2022. The procedure's change log confirms the move from 3rd to 5th in March 2026."
+        },
+        {
+          "id": "NL-PAY-PROC-001",
+          "reason": "Applies to the Netherlands, not Belgium."
+        },
+        {
+          "id": "TEAMS-BE-CONSULTANTS-20260922",
+          "reason": "Exception for Brouwerij De Kroon only. Mention it, but don't apply it to all clients."
+        }
+      ],
+      "who_to_ask": null
+    },
+    {
+      "id": "Q2",
+      "purpose": "Undocumented exception: answer exists, but only in chat",
+      "question": "What is the payroll input deadline for Brouwerij De Kroon?",
+      "context": {
+        "country": "BE",
+        "client": "dekroon"
+      },
+      "expected_answer": "Temporarily the 7th working day (e.g. Fri 9 Oct 2026 for September) until the end of December 2026. This was agreed in Teams and approved verbally, but it is not recorded in the client file, which the procedure requires.",
+      "confidence": "medium",
+      "trusted_sources": [
+        "TEAMS-BE-CONSULTANTS-20260922"
+      ],
+      "sources_to_flag": [
+        {
+          "id": "CLIENT-DEKROON",
+          "reason": "Says 'no deviations recorded', but it was last updated before the exception was agreed (2026-08-14)."
+        },
+        {
+          "id": "BE-PAY-PROC-001",
+          "reason": "Standard rule is the 5th working day, and exceptions are only valid once recorded in the client file."
+        }
+      ],
+      "who_to_ask": [
+        "p-pieter",
+        "p-sofie"
+      ]
+    },
+    {
+      "id": "Q3",
+      "purpose": "Precise lookup",
+      "question": "When is the September 2026 payroll input due?",
+      "context": {
+        "country": "BE",
+        "client": null
+      },
+      "expected_answer": "Wednesday 7 October 2026 at 17:00.",
+      "confidence": "high",
+      "trusted_sources": [
+        "BE-PAY-CAL-2026"
+      ],
+      "sources_to_flag": [
+        {
+          "id": "BE-PAY-CHK-2022",
+          "reason": "Would give Mon 5 Oct 2026 (3rd working day), which is outdated."
+        }
+      ],
+      "who_to_ask": null
+    },
+    {
+      "id": "Q4",
+      "purpose": "Second SD Worx story: portfolio handover",
+      "question": "How do I take over a client portfolio from a colleague?",
+      "context": {
+        "country": "BE",
+        "client": null
+      },
+      "expected_answer": "Follow the handover checklist v2: read the client file in mysdworx, review open tickets, check exceptions in the client file and in Teams threads, shadow a payroll run, meet the client contact together, and mark the handover complete.",
+      "confidence": "high",
+      "trusted_sources": [
+        "BE-HANDOVER-2026"
+      ],
+      "sources_to_flag": [
+        {
+          "id": "BE-HANDOVER-2019",
+          "reason": "Outdated (2019) and its owner Marc Peeters has left the company."
+        }
+      ],
+      "who_to_ask": [
+        "p-lien"
+      ]
+    },
+    {
+      "id": "Q5",
+      "purpose": "Control: no conflict, the tool should not invent one",
+      "question": "When can employees see their payslip?",
+      "context": {
+        "country": "BE",
+        "client": null
+      },
+      "expected_answer": "On the 10th working day of the month after the pay month, in the employee portal (e.g. Wed 14 Oct 2026 for September).",
+      "confidence": "high",
+      "trusted_sources": [
+        "BE-PAYSLIP-001",
+        "BE-PAY-CAL-2026"
+      ],
+      "sources_to_flag": [],
+      "who_to_ask": null
+    },
+    {
+      "id": "Q6",
+      "purpose": "Noise: a different deadline that must not be confused with payroll input",
+      "question": "What is the deadline for expense claims?",
+      "context": {
+        "country": "BE",
+        "client": null
+      },
+      "expected_answer": "The 20th of the month following the expense. Late claims need manager approval.",
+      "confidence": "high",
+      "trusted_sources": [
+        "BE-EXPENSES-001"
+      ],
+      "sources_to_flag": [],
+      "who_to_ask": null
+    },
+    {
+      "id": "Q7",
+      "purpose": "Knowledge gap: no documents, so connect to an expert",
+      "question": "What is the payroll input deadline for Luxembourg clients?",
+      "context": {
+        "country": "LU",
+        "client": null
+      },
+      "expected_answer": "No document covers Luxembourg. Don't guess from the Belgian or Dutch procedure.",
+      "confidence": "none",
+      "trusted_sources": [],
+      "sources_to_flag": [
+        {
+          "id": "BE-PAY-PROC-001",
+          "reason": "Applies to Belgium, not Luxembourg."
+        },
+        {
+          "id": "NL-PAY-PROC-001",
+          "reason": "Applies to the Netherlands, not Luxembourg."
+        }
+      ],
+      "who_to_ask": [
+        "p-anne"
+      ]
+    },
+    {
+      "id": "Q8",
+      "purpose": "Over-generalisation: the exception must not spread to other clients",
+      "question": "Does Garage Verhaeghe also get the 7th working day deadline?",
+      "context": {
+        "country": "BE",
+        "client": "verhaeghe"
+      },
+      "expected_answer": "No. The 7th working day applies only to Brouwerij De Kroon. Garage Verhaeghe stays on the 5th working day.",
+      "confidence": "high",
+      "trusted_sources": [
+        "TEAMS-BE-CONSULTANTS-20260922",
+        "BE-PAY-PROC-001"
+      ],
+      "sources_to_flag": [],
+      "who_to_ask": null
+    }
+  ]
+}

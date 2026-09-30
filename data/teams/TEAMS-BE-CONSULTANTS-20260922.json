@@ -1,0 +1,70 @@
+{
+  "id": "TEAMS-BE-CONSULTANTS-20260922",
+  "type": "teams_thread",
+  "title": "Payroll BE – Consultants channel: De Kroon input deadline",
+  "source": "Microsoft Teams › Payroll BE › Consultants",
+  "owner": null,
+  "last_updated": "2026-09-23T09:14:00+02:00",
+  "country": "BE",
+  "client": null,
+  "messages": [
+    {
+      "id": "m1",
+      "author": "p-nora",
+      "timestamp": "2026-09-22T14:02:00+02:00",
+      "text": "Quick question: Brouwerij De Kroon says their payroll input deadline is now the 7th working day. The procedure says the 5th. Who's right?",
+      "reactions": []
+    },
+    {
+      "id": "m2",
+      "author": "p-pieter",
+      "timestamp": "2026-09-22T14:20:00+02:00",
+      "text": "Both :) For De Kroon only, we moved their deadline to the 7th working day while they migrate to mysdworx. The parallel runs make their input late. This applies until the end of December 2026, then it's back to the 5th.",
+      "reactions": [
+        {
+          "type": "like",
+          "by": [
+            "p-nora",
+            "p-jens",
+            "p-lien"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "author": "p-nora",
+      "timestamp": "2026-09-22T14:22:00+02:00",
+      "text": "Is that written down somewhere? I couldn't find it in their client file.",
+      "reactions": []
+    },
+    {
+      "id": "m4",
+      "author": "p-pieter",
+      "timestamp": "2026-09-22T14:31:00+02:00",
+      "text": "Not yet. Sofie approved it verbally last week. I'll add it to the client file when I find the time.",
+      "reactions": []
+    },
+    {
+      "id": "m5",
+      "author": "p-jens",
+      "timestamp": "2026-09-23T09:10:00+02:00",
+      "text": "Does the same apply to Garage Verhaeghe? They're migrating too.",
+      "reactions": []
+    },
+    {
+      "id": "m6",
+      "author": "p-pieter",
+      "timestamp": "2026-09-23T09:14:00+02:00",
+      "text": "No, only De Kroon for now. Everyone else stays on the 5th working day.",
+      "reactions": [
+        {
+          "type": "like",
+          "by": [
+            "p-jens"
+          ]
+        }
+      ]
+    }
+  ]
+}
