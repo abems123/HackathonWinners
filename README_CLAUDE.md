@@ -38,6 +38,8 @@ Copy-Item .env.example .env
 
 On Linux/macOS use `.venv/bin/python` and `cp`. Open `http://127.0.0.1:8000`. Demo password is `Bron-demo-2026!`; usernames include `lotte`, `sarah`, `sofie`, `pieter`, `anne`, and `admin`. The `system` account has an unusable password. Seed accounts are exclusively for synthetic demonstrations.
 
+Demo auto-login: `core/demo_login.py` seeds an empty database and signs visitors in as `lotte` (disable with `BRON_DEMO_AUTOLOGIN=false`; never on real data). `/login/` still works for other demo accounts.
+
 If login "does nothing" or the browser jumps to `https://127.0.0.1`, the server is running with `DJANGO_DEBUG=False` over plain HTTP: keep `DJANGO_DEBUG=True` locally, or set `DJANGO_HTTPS=False` when deliberately testing a non-debug build over HTTP. A missing `DJANGO_SECRET_KEY` now fails with an explicit message. Always install from `requirements.lock` (it now contains Markdown, bleach, gunicorn and psycopg; their absence was why tests failed).
 
 `.env`, SQLite databases, the virtual environment, compiled Tailwind executable and `output/` are ignored. Do not read, print or commit credentials. `DJANGO_SECRET_KEY` is required; debug defaults to false. Model name and cloud project are environment configuration, not hard-coded.

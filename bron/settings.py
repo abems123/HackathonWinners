@@ -61,6 +61,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "core.demo_login.DemoAutoLoginMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -116,3 +117,5 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = HTTPS_ONLY
 SECURE_HSTS_PRELOAD = HTTPS_ONLY
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024
 AI_MODE = os.getenv("AI_MODE", "cache")
+# Hackathon demo: auto-seed and sign visitors in as the synthetic consultant.
+DEMO_AUTOLOGIN = env_bool("BRON_DEMO_AUTOLOGIN", True)
