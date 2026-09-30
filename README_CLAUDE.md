@@ -38,6 +38,8 @@ Copy-Item .env.example .env
 
 On Linux/macOS use `.venv/bin/python` and `cp`. Open `http://127.0.0.1:8000`. Demo password is `Bron-demo-2026!`; usernames include `lotte`, `sarah`, `sofie`, `pieter`, `anne`, and `admin`. The `system` account has an unusable password. Seed accounts are exclusively for synthetic demonstrations.
 
+If login "does nothing" or the browser jumps to `https://127.0.0.1`, the server is running with `DJANGO_DEBUG=False` over plain HTTP: keep `DJANGO_DEBUG=True` locally, or set `DJANGO_HTTPS=False` when deliberately testing a non-debug build over HTTP. A missing `DJANGO_SECRET_KEY` now fails with an explicit message. Always install from `requirements.lock` (it now contains Markdown, bleach, gunicorn and psycopg; their absence was why tests failed).
+
 `.env`, SQLite databases, the virtual environment, compiled Tailwind executable and `output/` are ignored. Do not read, print or commit credentials. `DJANGO_SECRET_KEY` is required; debug defaults to false. Model name and cloud project are environment configuration, not hard-coded.
 
 ## File map
@@ -139,7 +141,7 @@ For UI/source/review changes:
 
 The wrapper creates a separate temporary SQLite database and server, runs seven real Chrome workflows, then removes only that temporary test state. It does not reset the developer's demo database. Chrome must be installed; alternatively install Playwright Chromium and set `BRON_BROWSER_CHANNEL=chromium`. Screenshots/report are in ignored `output/browser/`. Inspect desktop and mobile screenshots as well as assertions; wait for responsive menu transitions before capturing.
 
-The test suite covers the status truth table, exception dependencies, repeated seed/ripple/sweep, object permissions and CSRF, all review rules, audit protections, structured output failures, scope isolation and all **eight** teammate corpus evaluation questions. Test-only password hashing is intentionally fast; do not copy it into production settings.
+The test suite covers CSRF-enforced login, CRLF uploads (browser textareas/Windows files must still give 8/1/1), the status truth table, exception dependencies, repeated seed/ripple/sweep, object permissions and CSRF, all review rules, audit protections, structured output failures, scope isolation and all **eight** teammate corpus evaluation questions. Test-only password hashing is intentionally fast; do not copy it into production settings.
 
 The original connected browser runtime could not start because its Windows sandbox helper failed. Headless Playwright/Chrome testing succeeded as a repository test fallback; do not report that no browser verification happened.
 
@@ -148,7 +150,7 @@ The original connected browser runtime could not start because its Windows sandb
 - `seed` is idempotent and preserves reviews; `seed --reset` flushes the entire demonstration database and is debug-only. Never run reset against a shared database merely to make tests pass.
 - `sweep` creates deduplicated expiry reviews. Status also checks expiry at read time even without a sweep.
 - `tools/build_css.ps1` downloads the pinned Windows Tailwind standalone compiler and rebuilds the checked-in CSS. Runtime needs no Node/CDN.
-- `build.sh` installs dependencies and collects static assets; `start.sh` applies migrations and starts Gunicorn. Review Render's database/host/CSRF variables in `docs/deployment.md` before deploying.
+- `build.sh` installs `requirements.lock` and collects static assets; `start.sh` applies migrations, runs the idempotent demo `seed` when `BRON_SEED_DEMO=true` (set in `render.yaml`, so the deployed login accounts exist) and starts Gunicorn. Set it to `false` before real data is stored. Review Render's database/host/CSRF variables in `docs/deployment.md` before deploying.
 - Demo dates are around 30 September 2026; payroll closes are October 2026. The real clock controls expiry, so time-dependent demo states can change later. Do not freeze production time to keep badges green.
 - Several teammates/agents have committed during implementation. Always inspect status and preserve unrelated files such as a deployment patch. Use explicit `git add` paths. Normal fast-forward pushes only.
 
