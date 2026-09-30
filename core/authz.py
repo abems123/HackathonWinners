@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.http import Http404
 
 from .domain.scope import matches
-from .models import Client, Doubt, Pin, Source
+from .models import Client, Doubt, Layer, Pin, Source
 
 
 def human(user):
@@ -15,7 +15,9 @@ def clients_for(user):
     if user.role == "ADMIN":
         return Client.objects.all()
     if user.role == "OWNER":
-        return Client.objects.all()  # Owners have portfolio oversight; mutations remain scope checked.
+        rules = list(Layer.objects.filter(Q(owner=user) | Q(team_id=user.team_id)).values_list("scope_rule", flat=True))
+        return Client.objects.filter(pk__in=[c.pk for c in Client.objects.all()
+            if c.consultants.filter(pk=user.pk).exists() or any(matches(rule, c.profile) for rule in rules)])
     return Client.objects.filter(consultants=user)
 
 
@@ -34,8 +36,8 @@ def can_read_pin(user, pin):
         return False
     if pin.client_id:
         return can_read_client(user, pin.client)
-    return any(matches(pin.layer.scope_rule, c.profile) for c in clients_for(user)) or (
-        user.role in {"OWNER", "ADMIN"} and can_change_layer_pin(user, pin))
+    # Layer knowledge is shared across the organisation; client knowledge is private.
+    return user.role in {"CONSULTANT", "OWNER", "ADMIN"}
 
 
 def can_change_pin(user, pin):
@@ -47,7 +49,7 @@ def can_read_source(user, source):
         return False
     if source.client_id:
         return can_read_client(user, source.client)
-    return user.role == "ADMIN" or any(matches(source.layer.scope_rule, c.profile) for c in clients_for(user))
+    return user.role in {"CONSULTANT", "OWNER", "ADMIN"}
 
 
 def can_upload_version(user, source):
