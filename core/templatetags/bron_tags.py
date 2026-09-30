@@ -1,5 +1,6 @@
 from django import template
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -24,4 +25,4 @@ def icon(name, size=20):
         "menu": '<path d="M4 6h16M4 12h16M4 18h16"/>',
     }
     # Only static developer-owned SVG strings are marked safe.
-    return format_html('<svg width="{}" height="{}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{}</svg>', size, size, format_html(paths.get(name, paths["source"])))
+    return format_html('<svg width="{}" height="{}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{}</svg>', size, size, mark_safe(paths.get(name, paths["source"])))

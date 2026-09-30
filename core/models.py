@@ -77,6 +77,10 @@ class Source(models.Model):
                        Q(layer__isnull=True, client__isnull=False)), name="source_one_scope")]
 
     @property
+    def scope_name(self):
+        return self.client.name if self.client_id else self.layer.name
+
+    @property
     def latest(self):
         return self.versions.order_by("-number").first()
 
@@ -139,6 +143,10 @@ class Pin(models.Model):
     def save(self, *args, **kwargs):
         self.passage_hash = passage_hash(self.prefix, self.quote, self.suffix)
         super().save(*args, **kwargs)
+
+    @property
+    def scope_name(self):
+        return self.client.name if self.client_id else self.layer.name
 
     @property
     def open_kinds(self):

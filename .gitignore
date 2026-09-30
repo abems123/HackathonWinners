@@ -9,3 +9,4 @@ staticfiles/
 output/
 .coverage
 htmlcov/
+tools/*.exe

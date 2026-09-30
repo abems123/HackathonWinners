@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -58,6 +58,10 @@ def clients(request):
 
 
 def get_client(user, pk):
+    try:
+        pk = int(pk)
+    except (TypeError, ValueError):
+        raise Http404("Not found") from None
     client = get_object_or_404(Client, pk=pk)
     authz.require(authz.can_read_client(user, client))
     return client
@@ -137,6 +141,8 @@ def doubt_detail(request, pk):
     restricted = not authz.can_read_pin(request.user, doubt.pin)
     form = prepare_action_form(request.user, doubt.pin, expert_only=restricted,
                               initial={"action": "answer" if restricted else "confirm", "version_id": doubt.pin.source.latest.pk})
+    if doubt.related_pin_id and not authz.can_read_pin(request.user, doubt.related_pin):
+        doubt.related_pin = None
     return render(request, "core/doubt.html", {"section": "queue", "doubt": doubt, "pin": doubt.pin,
         "form": form, "restricted": restricted, "can_resolve": authz.can_resolve_doubt(request.user, doubt)})
 
@@ -162,7 +168,8 @@ def action(request, pk):
             if request.headers.get("HX-Request"):
                 return HttpResponse(headers={"HX-Redirect": target})
             return redirect(target)
-    return render(request, "core/action_error.html", {"form": form, "target": target}, status=422)
+    template = "core/partials/action_errors.html" if request.headers.get("HX-Request") else "core/action_error.html"
+    return render(request, template, {"form": form, "target": target}, status=422)
 
 
 @login_required
