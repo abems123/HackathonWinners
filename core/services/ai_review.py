@@ -30,31 +30,58 @@ def attach_conflict(a, b, provenance):
     targets = [a, b] if holds_a == holds_b else [b if holds_a else a]
     for pin in targets:
         other = b if pin.pk == a.pk else a
-        label = "Demo AI fixture (unverified)" if provenance == "fixture" else "Possible contradiction · AI (unverified)"
-        create_doubt(pin, "POSSIBLE_CONFLICT", f"Evidence comparison flagged incompatible claims with passage {other.pk}. A human must review them.", other, ai_label=label)
+        label = (
+            "Demo AI fixture (unverified)"
+            if provenance == "fixture"
+            else "Possible contradiction · AI (unverified)"
+        )
+        create_doubt(
+            pin,
+            "POSSIBLE_CONFLICT",
+            f"Evidence comparison flagged incompatible claims with passage {other.pk}. A human must review them.",
+            other,
+            ai_label=label,
+        )
     return len(targets)
 
 
 def review_source(user, source):
     authz.require(authz.can_upload_version(user, source))
     pins = list(source.pins.filter(superseded_by__isnull=True, excluded=False))
-    candidates = list(authz.pins_for(user).filter(superseded_by__isnull=True, excluded=False).exclude(source=source))
+    candidates = list(
+        authz.pins_for(user)
+        .filter(superseded_by__isnull=True, excluded=False)
+        .exclude(source=source)
+    )
     results, compared, flagged = [], 0, 0
     for pin in pins:
         claims, provenance = extract_claims(pin.quote)
         results.append({"pin": pin, "claims": claims, "provenance": provenance})
         if provenance == "invalid":
-            create_doubt(pin, "AI_SUGGESTED", "The structured evidence check was invalid. Review manually; no AI label was applied.")
+            create_doubt(
+                pin,
+                "AI_SUGGESTED",
+                "The structured evidence check was invalid. Review manually; no AI label was applied.",
+            )
         for other in candidates:
             if not same_scope(pin, other):
                 continue
             result, comparison_provenance = compare_claims(pin.quote, other.quote)
             if result is None:
                 if comparison_provenance == "invalid":
-                    create_doubt(pin, "AI_SUGGESTED", "The evidence comparison was invalid. Review manually; no AI label was applied.")
+                    create_doubt(
+                        pin,
+                        "AI_SUGGESTED",
+                        "The evidence comparison was invalid. Review manually; no AI label was applied.",
+                    )
                 continue
             compared += 1
             if result.relation == "CONTRADICTS":
                 flagged += attach_conflict(pin, other, comparison_provenance)
-    record(user, "AI_EVIDENCE_CHECK", f"Structured checks: {compared} comparisons, {flagged} review attachments. No confirmations or resolutions.", source=source)
+    record(
+        user,
+        "AI_EVIDENCE_CHECK",
+        f"Structured checks: {compared} comparisons, {flagged} review attachments. No confirmations or resolutions.",
+        source=source,
+    )
     return {"results": results, "compared": compared, "flagged": flagged}

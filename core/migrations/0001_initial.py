@@ -9,218 +9,553 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AiCache',
+            name="AiCache",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('key', models.CharField(max_length=64, unique=True)),
-                ('task', models.CharField(max_length=40)),
-                ('model', models.CharField(max_length=100)),
-                ('prompt_version', models.CharField(max_length=20)),
-                ('output', models.JSONField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("key", models.CharField(max_length=64, unique=True)),
+                ("task", models.CharField(max_length=40)),
+                ("model", models.CharField(max_length=100)),
+                ("prompt_version", models.CharField(max_length=20)),
+                ("output", models.JSONField()),
             ],
         ),
         migrations.CreateModel(
-            name='Team',
+            name="Team",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Topic',
+            name="Topic",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('slug', models.SlugField(unique=True)),
-                ('name', models.CharField(max_length=120)),
-                ('description', models.CharField(blank=True, max_length=250)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("slug", models.SlugField(unique=True)),
+                ("name", models.CharField(max_length=120)),
+                ("description", models.CharField(blank=True, max_length=250)),
             ],
         ),
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('first_name', models.CharField(blank=True, max_length=150, verbose_name='first name')),
-                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('role', models.CharField(choices=[('CONSULTANT', 'Consultant'), ('OWNER', 'Owner'), ('ADMIN', 'Admin'), ('EXPERT', 'Expert'), ('SYSTEM', 'System')], default='CONSULTANT', max_length=20)),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
-                ('team', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.team')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(blank=True, null=True, verbose_name="last login"),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        error_messages={"unique": "A user with that username already exists."},
+                        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        max_length=150,
+                        unique=True,
+                        validators=[django.contrib.auth.validators.UnicodeUsernameValidator()],
+                        verbose_name="username",
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(blank=True, max_length=150, verbose_name="first name"),
+                ),
+                (
+                    "last_name",
+                    models.CharField(blank=True, max_length=150, verbose_name="last name"),
+                ),
+                (
+                    "email",
+                    models.EmailField(blank=True, max_length=254, verbose_name="email address"),
+                ),
+                (
+                    "is_staff",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates whether the user can log into this admin site.",
+                        verbose_name="staff status",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                        verbose_name="active",
+                    ),
+                ),
+                (
+                    "date_joined",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date joined"
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[
+                            ("CONSULTANT", "Consultant"),
+                            ("OWNER", "Owner"),
+                            ("ADMIN", "Admin"),
+                            ("EXPERT", "Expert"),
+                            ("SYSTEM", "System"),
+                        ],
+                        default="CONSULTANT",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "groups",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.group",
+                        verbose_name="groups",
+                    ),
+                ),
+                (
+                    "user_permissions",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Specific permissions for this user.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.permission",
+                        verbose_name="user permissions",
+                    ),
+                ),
+                (
+                    "team",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.team",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
             },
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ("objects", django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name='Client',
+            name="Client",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=160)),
-                ('sector', models.CharField(max_length=100)),
-                ('profile', models.JSONField(default=dict)),
-                ('profile_version', models.PositiveIntegerField(default=1)),
-                ('payroll_close', models.DateField()),
-                ('initials', models.CharField(default='CL', max_length=3)),
-                ('color', models.CharField(default='sage', max_length=20)),
-                ('consultants', models.ManyToManyField(related_name='clients', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=160)),
+                ("sector", models.CharField(max_length=100)),
+                ("profile", models.JSONField(default=dict)),
+                ("profile_version", models.PositiveIntegerField(default=1)),
+                ("payroll_close", models.DateField()),
+                ("initials", models.CharField(default="CL", max_length=3)),
+                ("color", models.CharField(default="sage", max_length=20)),
+                (
+                    "consultants",
+                    models.ManyToManyField(related_name="clients", to=settings.AUTH_USER_MODEL),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Layer',
+            name="Layer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=120)),
-                ('scope_rule', models.JSONField(default=dict)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='owned_layers', to=settings.AUTH_USER_MODEL)),
-                ('team', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='core.team')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=120)),
+                ("scope_rule", models.JSONField(default=dict)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="owned_layers",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "team",
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="core.team"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Source',
+            name="Source",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('type', models.CharField(default='Policy document', max_length=40)),
-                ('knowledge_channel', models.BooleanField(default=False)),
-                ('client', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.client')),
-                ('layer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.layer')),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='sources', to=settings.AUTH_USER_MODEL)),
-                ('topics', models.ManyToManyField(to='core.topic')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("type", models.CharField(default="Policy document", max_length=40)),
+                ("knowledge_channel", models.BooleanField(default=False)),
+                (
+                    "client",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.client",
+                    ),
+                ),
+                (
+                    "layer",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.layer",
+                    ),
+                ),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="sources",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("topics", models.ManyToManyField(to="core.topic")),
             ],
         ),
         migrations.CreateModel(
-            name='Pin',
+            name="Pin",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=180)),
-                ('quote', models.TextField()),
-                ('prefix', models.TextField(blank=True)),
-                ('suffix', models.TextField(blank=True)),
-                ('passage_hash', models.CharField(max_length=64)),
-                ('origin', models.CharField(default='HUMAN', max_length=20)),
-                ('confirmed_at', models.DateTimeField(blank=True, null=True)),
-                ('confirmed_profile_version', models.PositiveIntegerField(blank=True, null=True)),
-                ('valid_until', models.DateTimeField(blank=True, null=True)),
-                ('base_passage_hash', models.CharField(blank=True, max_length=64, null=True)),
-                ('excluded', models.BooleanField(default=False)),
-                ('base', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='exceptions', to='core.pin')),
-                ('client', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.client')),
-                ('confirmed_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
-                ('layer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.layer')),
-                ('superseded_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='supersedes', to='core.pin')),
-                ('source', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='pins', to='core.source')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("title", models.CharField(max_length=180)),
+                ("quote", models.TextField()),
+                ("prefix", models.TextField(blank=True)),
+                ("suffix", models.TextField(blank=True)),
+                ("passage_hash", models.CharField(max_length=64)),
+                ("origin", models.CharField(default="HUMAN", max_length=20)),
+                ("confirmed_at", models.DateTimeField(blank=True, null=True)),
+                ("confirmed_profile_version", models.PositiveIntegerField(blank=True, null=True)),
+                ("valid_until", models.DateTimeField(blank=True, null=True)),
+                ("base_passage_hash", models.CharField(blank=True, max_length=64, null=True)),
+                ("excluded", models.BooleanField(default=False)),
+                (
+                    "base",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="exceptions",
+                        to="core.pin",
+                    ),
+                ),
+                (
+                    "client",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.client",
+                    ),
+                ),
+                (
+                    "confirmed_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "layer",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.layer",
+                    ),
+                ),
+                (
+                    "superseded_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="supersedes",
+                        to="core.pin",
+                    ),
+                ),
+                (
+                    "source",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="pins",
+                        to="core.source",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='AuditEvent',
+            name="AuditEvent",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('action', models.CharField(max_length=60)),
-                ('detail', models.TextField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('actor', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
-                ('client', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.client')),
-                ('pin', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.pin')),
-                ('source', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.source')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("action", models.CharField(max_length=60)),
+                ("detail", models.TextField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "actor",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "client",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.client",
+                    ),
+                ),
+                (
+                    "pin",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.pin",
+                    ),
+                ),
+                (
+                    "source",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.source",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_at'],
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='SourceVersion',
+            name="SourceVersion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.PositiveIntegerField()),
-                ('content', models.TextField()),
-                ('content_hash', models.CharField(editable=False, max_length=64)),
-                ('effective_from', models.DateTimeField(default=django.utils.timezone.now)),
-                ('effective_to', models.DateTimeField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='versions', to='core.source')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("number", models.PositiveIntegerField()),
+                ("content", models.TextField()),
+                ("content_hash", models.CharField(editable=False, max_length=64)),
+                ("effective_from", models.DateTimeField(default=django.utils.timezone.now)),
+                ("effective_to", models.DateTimeField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "source",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="versions",
+                        to="core.source",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='pin',
-            name='confirmed_version',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='confirmations', to='core.sourceversion'),
+            model_name="pin",
+            name="confirmed_version",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="confirmations",
+                to="core.sourceversion",
+            ),
         ),
         migrations.AddField(
-            model_name='pin',
-            name='version',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='core.sourceversion'),
+            model_name="pin",
+            name="version",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="core.sourceversion"
+            ),
         ),
         migrations.CreateModel(
-            name='Doubt',
+            name="Doubt",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('kind', models.CharField(max_length=30)),
-                ('reason', models.TextField()),
-                ('status', models.CharField(default='OPEN', max_length=10)),
-                ('dedupe_key', models.CharField(blank=True, max_length=150, null=True)),
-                ('severity', models.PositiveSmallIntegerField(default=2)),
-                ('due_date', models.DateField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('resolved_at', models.DateTimeField(blank=True, null=True)),
-                ('resolution', models.TextField(blank=True)),
-                ('ai_label', models.CharField(blank=True, max_length=100)),
-                ('assignee_user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
-                ('pin', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='doubts', to='core.pin')),
-                ('related_pin', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='related_doubts', to='core.pin')),
-                ('assignee_team', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='core.team')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("kind", models.CharField(max_length=30)),
+                ("reason", models.TextField()),
+                ("status", models.CharField(default="OPEN", max_length=10)),
+                ("dedupe_key", models.CharField(blank=True, max_length=150, null=True)),
+                ("severity", models.PositiveSmallIntegerField(default=2)),
+                ("due_date", models.DateField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("resolved_at", models.DateTimeField(blank=True, null=True)),
+                ("resolution", models.TextField(blank=True)),
+                ("ai_label", models.CharField(blank=True, max_length=100)),
+                (
+                    "assignee_user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "pin",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="doubts",
+                        to="core.pin",
+                    ),
+                ),
+                (
+                    "related_pin",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="related_doubts",
+                        to="core.pin",
+                    ),
+                ),
+                (
+                    "assignee_team",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="core.team",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['severity', 'due_date', 'created_at'],
+                "ordering": ["severity", "due_date", "created_at"],
             },
         ),
         migrations.AddField(
-            model_name='pin',
-            name='topic',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='core.topic'),
+            model_name="pin",
+            name="topic",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="core.topic"),
         ),
         migrations.AddConstraint(
-            model_name='sourceversion',
-            constraint=models.UniqueConstraint(fields=('source', 'content_hash'), name='unique_source_content'),
+            model_name="sourceversion",
+            constraint=models.UniqueConstraint(
+                fields=("source", "content_hash"), name="unique_source_content"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='sourceversion',
-            constraint=models.UniqueConstraint(fields=('source', 'number'), name='unique_source_version'),
+            model_name="sourceversion",
+            constraint=models.UniqueConstraint(
+                fields=("source", "number"), name="unique_source_version"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='doubt',
-            constraint=models.CheckConstraint(condition=models.Q(models.Q(('assignee_team__isnull', True), ('assignee_user__isnull', False)), models.Q(('assignee_team__isnull', False), ('assignee_user__isnull', True)), _connector='OR'), name='doubt_one_assignee'),
+            model_name="doubt",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    models.Q(("assignee_team__isnull", True), ("assignee_user__isnull", False)),
+                    models.Q(("assignee_team__isnull", False), ("assignee_user__isnull", True)),
+                    _connector="OR",
+                ),
+                name="doubt_one_assignee",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='doubt',
-            constraint=models.UniqueConstraint(condition=models.Q(('status', 'OPEN')), fields=('dedupe_key',), name='unique_open_doubt'),
+            model_name="doubt",
+            constraint=models.UniqueConstraint(
+                condition=models.Q(("status", "OPEN")),
+                fields=("dedupe_key",),
+                name="unique_open_doubt",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='source',
-            constraint=models.CheckConstraint(condition=models.Q(models.Q(('client__isnull', True), ('layer__isnull', False)), models.Q(('client__isnull', False), ('layer__isnull', True)), _connector='OR'), name='source_one_scope'),
+            model_name="source",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    models.Q(("client__isnull", True), ("layer__isnull", False)),
+                    models.Q(("client__isnull", False), ("layer__isnull", True)),
+                    _connector="OR",
+                ),
+                name="source_one_scope",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='pin',
-            constraint=models.CheckConstraint(condition=models.Q(models.Q(('client__isnull', True), ('layer__isnull', False)), models.Q(('client__isnull', False), ('layer__isnull', True)), _connector='OR'), name='pin_one_scope'),
+            model_name="pin",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    models.Q(("client__isnull", True), ("layer__isnull", False)),
+                    models.Q(("client__isnull", False), ("layer__isnull", True)),
+                    _connector="OR",
+                ),
+                name="pin_one_scope",
+            ),
         ),
     ]

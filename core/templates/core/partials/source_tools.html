@@ -1,1 +1,4 @@
-{% load bron_tags %}<div class="context-banner"><span class="banner-icon">{% icon 'shield' 23 %}</span><div><strong>Follow the evidence.</strong><p>Extract literal claims and check for possible contradictions. Every finding stays unverified until a person reviews it.</p></div><form method="post" action="{% url 'ai_review' source.pk %}">{% csrf_token %}<button class="button secondary">Check evidence {% icon 'arrow' 15 %}</button></form></div>
+{% load bron_tags %}<div class="context-banner"><span class="banner-icon">{% icon 'shield' 23 %}</span>
+<div><strong>Follow the evidence.</strong>
+<p>Extract literal claims and check for possible contradictions. Every finding stays unverified until a person reviews it.</p></div>
+<form method="post" action="{% url 'ai_review' source.pk %}">{% csrf_token %}<button class="button secondary">Check evidence {% icon 'arrow' 15 %}</button></form></div>

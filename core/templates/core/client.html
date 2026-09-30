@@ -1,1 +1,28 @@
-{% extends 'core/base.html' %}{% load bron_tags %}{% block title %}{{ client.name }}{% endblock %}{% block breadcrumb %}<a href="{% url 'clients' %}">My clients</a> <span>/</span> {{ client.name }}{% endblock %}{% block content %}<div class="page-heading"><div class="client-heading"><span class="client-avatar large {{ client.color }}">{{ client.initials }}</span><div><span class="eyebrow">CLIENT FILE · {{ client.profile.country }}</span><h1>{{ client.name }}</h1><p>{{ client.sector }} · Profile v{{ client.profile_version }}</p></div></div><a class="button secondary" href="{% url 'profile' client.pk %}">Edit client profile</a></div><div class="client-context"><div><span class="label">INHERITED LAYERS</span><div class="layer-tags">{% for layer in client.layers %}<span>{% icon 'link' 13 %} {{ layer.name }}</span>{% empty %}<span>No matching layers</span>{% endfor %}</div></div><div><span class="label">NEXT PAYROLL CLOSE</span><strong>{{ client.payroll_close|date:'j F Y' }}</strong></div><div><span class="label">PASSAGES</span><strong>{{ client.confirmed_count }} confirmed · {{ client.review_count }} to review</strong></div></div><div class="section-heading"><div><h2>Choose a topic</h2><p>The client and topic are your query. Every answer leads back to a passage.</p></div></div><div class="topic-grid">{% for row in topics %}<a class="topic-card" href="{% url 'topic' client.pk row.topic.slug %}"><span class="topic-icon">{% icon 'source' 22 %}</span><h3>{{ row.topic.name }}</h3><p>{{ row.topic.description }}</p><div class="topic-card-bottom">{% if row.reviews %}<span class="badge NEEDS_REVIEW">{{ row.reviews }} to review</span>{% elif row.total %}<span class="badge CONFIRMED">{{ row.confirmed }} confirmed</span>{% else %}<span class="badge neutral">Knowledge gap</span>{% endif %}{% icon 'arrow' 17 %}</div></a>{% endfor %}</div><section class="recent-section"><div class="section-heading"><h2>Client activity</h2></div>{% include 'core/partials/events.html' %}</section>{% endblock %}
+{% extends 'core/base.html' %}{% load bron_tags %}{% block title %}{{ client.name }}{% endblock %}{% block breadcrumb %}<a href="{% url 'clients' %}">My clients</a> <span>/</span> {{ client.name }}{% endblock %}{% block content %}<div class="page-heading">
+<div class="client-heading"><span class="client-avatar large {{ client.color }}">{{ client.initials }}</span>
+<div><span class="eyebrow">CLIENT FILE · {{ client.profile.country }}</span>
+<h1>{{ client.name }}</h1>
+<p>{{ client.sector }} · Profile v{{ client.profile_version }}</p></div></div><a class="button secondary" href="{% url 'profile' client.pk %}">Edit client profile</a></div>
+<div class="client-context">
+<div><span class="label">INHERITED LAYERS</span>
+<div class="layer-tags">
+{% for layer in client.layers %}<span>{% icon 'link' 13 %} {{ layer.name }}</span>{% empty %}<span>No matching layers</span>
+{% endfor %}</div></div>
+<div><span class="label">NEXT PAYROLL CLOSE</span><strong>{{ client.payroll_close|date:'j F Y' }}</strong></div>
+<div><span class="label">PASSAGES</span><strong>{{ client.confirmed_count }} confirmed · {{ client.review_count }} to review</strong></div></div>
+<div class="section-heading">
+<div>
+<h2>Choose a topic</h2>
+<p>The client and topic are your query. Every answer leads back to a passage.</p></div></div>
+<div class="topic-grid">
+{% for row in topics %}<a class="topic-card" href="{% url 'topic' client.pk row.topic.slug %}"><span class="topic-icon">{% icon 'source' 22 %}</span>
+<h3>{{ row.topic.name }}</h3>
+<p>{{ row.topic.description }}</p>
+<div class="topic-card-bottom">
+{% if row.reviews %}<span class="badge NEEDS_REVIEW">{{ row.reviews }} to review</span>{% elif row.total %}<span class="badge CONFIRMED">{{ row.confirmed }} confirmed</span>{% else %}<span class="badge neutral">Knowledge gap</span>
+{% endif %}{% icon 'arrow' 17 %}</div></a>
+{% endfor %}</div>
+<section class="recent-section">
+<div class="section-heading">
+<h2>Client activity</h2></div>{% include 'core/partials/events.html' %}</section>
+{% endblock %}

@@ -10,8 +10,17 @@ class Status(str, Enum):
     CONFIRMED = "CONFIRMED"
 
 
-ORANGE_KINDS = frozenset({"SOURCE_CHANGED", "CONTEXT_CHANGED", "PROFILE_CHANGED", "EXPIRED",
-                         "AI_SUGGESTED", "POSSIBLE_CONFLICT", "SOURCE_OUTDATED"})
+ORANGE_KINDS = frozenset(
+    {
+        "SOURCE_CHANGED",
+        "CONTEXT_CHANGED",
+        "PROFILE_CHANGED",
+        "EXPIRED",
+        "AI_SUGGESTED",
+        "POSSIBLE_CONFLICT",
+        "SOURCE_OUTDATED",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -37,8 +46,9 @@ def own_assumptions_hold(pin, now):
         and pin.confirmed_version_id == pin.latest_version_id
         and (pin.valid_until is None or pin.valid_until > now)
         and (pin.version_effective_to is None or pin.version_effective_to > now)
-        and (pin.scope_type == "LAYER" or
-             pin.confirmed_profile_version == pin.client_profile_version)
+        and (
+            pin.scope_type == "LAYER" or pin.confirmed_profile_version == pin.client_profile_version
+        )
     )
 
 
@@ -48,8 +58,10 @@ def pin_status(pin, open_doubt_kinds, now):
     if open_doubt_kinds & ORANGE_KINDS or not own_assumptions_hold(pin, now):
         return Status.NEEDS_REVIEW
     if pin.base is not None:
-        if (pin_status(pin.base, pin.base_doubts, now) != Status.CONFIRMED
-                or pin.base.passage_hash != pin.base_passage_hash):
+        if (
+            pin_status(pin.base, pin.base_doubts, now) != Status.CONFIRMED
+            or pin.base.passage_hash != pin.base_passage_hash
+        ):
             return Status.NEEDS_REVIEW
     if "QUESTION" in open_doubt_kinds:
         return Status.UNCERTAIN

@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='source',
-            name='external_id',
+            model_name="source",
+            name="external_id",
             field=models.CharField(blank=True, max_length=100, null=True, unique=True),
         ),
         migrations.AddField(
-            model_name='source',
-            name='metadata',
+            model_name="source",
+            name="metadata",
             field=models.JSONField(default=dict),
         ),
         migrations.AddField(
-            model_name='sourceversion',
-            name='label',
+            model_name="sourceversion",
+            name="label",
             field=models.CharField(blank=True, max_length=30),
         ),
     ]

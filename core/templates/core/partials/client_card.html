@@ -1,1 +1,9 @@
-{% load bron_tags %}<a class="client-card" href="{% url 'client' client.pk %}"><div class="client-card-top"><span class="client-avatar {{ client.color }}">{{ client.initials }}</span><span class="country-tag">{{ client.profile.country }}</span></div><h3>{{ client.name }}</h3><p class="client-sector">{{ client.sector }}</p><div class="layer-tags">{% for layer in client.layers %}<span>{% icon 'link' 11 %} {{ layer.name }}</span>{% empty %}<span>Client context only</span>{% endfor %}</div><div class="client-status"><span><i class="small-dot {% if client.review_count %}orange{% else %}green{% endif %}"></i>{% if client.review_count %}{{ client.review_count }} to review{% elif client.pin_count %}All passages confirmed{% else %}No passages yet{% endif %}</span>{% icon 'arrow' 17 %}</div></a>
+{% load bron_tags %}<a class="client-card" href="{% url 'client' client.pk %}">
+<div class="client-card-top"><span class="client-avatar {{ client.color }}">{{ client.initials }}</span><span class="country-tag">{{ client.profile.country }}</span></div>
+<h3>{{ client.name }}</h3>
+<p class="client-sector">{{ client.sector }}</p>
+<div class="layer-tags">
+{% for layer in client.layers %}<span>{% icon 'link' 11 %} {{ layer.name }}</span>{% empty %}<span>Client context only</span>
+{% endfor %}</div>
+<div class="client-status"><span><i class="small-dot {% if client.review_count %}orange{% else %}green{% endif %}"></i>
+{% if client.review_count %}{{ client.review_count }} to review{% elif client.pin_count %}All passages confirmed{% else %}No passages yet{% endif %}</span>{% icon 'arrow' 17 %}</div></a>

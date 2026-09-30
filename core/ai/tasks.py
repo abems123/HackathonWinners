@@ -10,11 +10,17 @@ def extract_claims(passage):
 
 
 def compare_claims(passage_a, passage_b):
-    result, provenance = client.request("compare_claims", {"a": passage_a, "b": passage_b}, Comparison)
+    result, provenance = client.request(
+        "compare_claims", {"a": passage_a, "b": passage_b}, Comparison
+    )
     if result is None:
         return None, provenance
     if result.relation in {"CONTRADICTS", "SUPPORTS"} and (
-        not result.quote_a or not result.quote_b or result.quote_a not in passage_a or result.quote_b not in passage_b):
+        not result.quote_a
+        or not result.quote_b
+        or result.quote_a not in passage_a
+        or result.quote_b not in passage_b
+    ):
         return None, "invalid"
     return result, provenance
 

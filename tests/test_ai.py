@@ -13,12 +13,27 @@ pytestmark = pytest.mark.django_db
 
 
 def test_quote_guard_and_invalid_comparison():
-    with patch("core.ai.client.request", return_value=(Claims(claims=[
-        {"quote": "invented 500 EUR", "subject": "amount", "value": "500"},
-        {"quote": "100 EUR", "subject": "amount", "value": "100"}]), "live")):
+    with patch(
+        "core.ai.client.request",
+        return_value=(
+            Claims(
+                claims=[
+                    {"quote": "invented 500 EUR", "subject": "amount", "value": "500"},
+                    {"quote": "100 EUR", "subject": "amount", "value": "100"},
+                ]
+            ),
+            "live",
+        ),
+    ):
         claims, _ = extract_claims("The allowance is 100 EUR.")
         assert [c.quote for c in claims] == ["100 EUR"]
-    with patch("core.ai.client.request", return_value=(Comparison(relation="CONTRADICTS", quote_a="fake", quote_b="also fake"), "live")):
+    with patch(
+        "core.ai.client.request",
+        return_value=(
+            Comparison(relation="CONTRADICTS", quote_a="fake", quote_b="also fake"),
+            "live",
+        ),
+    ):
         result, provenance = compare_claims("100 EUR", "120 EUR")
         assert result is None and provenance == "invalid"
 
@@ -41,7 +56,10 @@ def test_offline_fixtures_require_no_network(seeded):
 
 def test_invalid_response_adds_doubt_without_ai_label(seeded):
     source = Source.objects.get(external_id="CORRECTION-V3")
-    with patch("core.services.ai_review.extract_claims", return_value=([], "invalid")), patch("core.services.ai_review.compare_claims", return_value=(None, "unavailable")):
+    with (
+        patch("core.services.ai_review.extract_claims", return_value=([], "invalid")),
+        patch("core.services.ai_review.compare_claims", return_value=(None, "unavailable")),
+    ):
         review_source(User.objects.get(username="sarah"), source)
     doubt = source.pins.get().doubts.get(kind="AI_SUGGESTED")
     assert not doubt.ai_label

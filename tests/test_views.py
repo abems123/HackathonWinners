@@ -33,13 +33,24 @@ def test_csrf_and_post_only_mutations(seeded):
     browser.force_login(User.objects.get(username="sarah"))
     pin = Source.objects.get(external_id="CORRECTION-V3").pins.get()
     assert browser.get(reverse("action", args=[pin.pk])).status_code == 405
-    assert browser.post(reverse("action", args=[pin.pk]), {"action": "confirm", "reason": "Checked"}).status_code == 403
+    assert (
+        browser.post(
+            reverse("action", args=[pin.pk]), {"action": "confirm", "reason": "Checked"}
+        ).status_code
+        == 403
+    )
 
 
 def test_question_view_does_not_expose_client(seeded, client):
     expert = User.objects.get(username="anne")
     pin = Source.objects.get(external_id="PEETERS-EXCEPTION").pins.get()
-    doubt = create_doubt(pin, "QUESTION", "Can you verify the reimbursement?", assignee_user=expert, assignee_team=None)
+    doubt = create_doubt(
+        pin,
+        "QUESTION",
+        "Can you verify the reimbursement?",
+        assignee_user=expert,
+        assignee_team=None,
+    )
     client.force_login(expert)
     page = client.get(reverse("doubt", args=[doubt.pk]))
     assert page.status_code == 200
@@ -56,7 +67,11 @@ def test_consultant_action_options_and_htmx(seeded, client):
     pin = Source.objects.get(external_id="CORRECTION-V3").pins.get()
     page = client.get(reverse("pin", args=[pin.pk]))
     assert b'value="confirm"' not in page.content
-    response = client.post(reverse("action", args=[pin.pk]), {"action": "source_outdated", "reason": "Please recheck"}, HTTP_HX_REQUEST="true")
+    response = client.post(
+        reverse("action", args=[pin.pk]),
+        {"action": "source_outdated", "reason": "Please recheck"},
+        HTTP_HX_REQUEST="true",
+    )
     assert response.status_code == 200
     assert response.headers["HX-Redirect"] == reverse("pin", args=[pin.pk])
     assert AuditEvent.objects.filter(action="SOURCE_OUTDATED").exists()
@@ -81,4 +96,9 @@ def test_upload_and_profile_routes(seeded, client):
     assert client.get(reverse("upload", args=[source.pk])).status_code == 404
     client.force_login(User.objects.get(username="sarah"))
     assert client.get(reverse("upload", args=[source.pk])).status_code == 200
-    assert client.get(reverse("profile", args=[Client.objects.get(name="Garage Peeters").pk])).status_code == 200
+    assert (
+        client.get(
+            reverse("profile", args=[Client.objects.get(name="Garage Peeters").pk])
+        ).status_code
+        == 200
+    )

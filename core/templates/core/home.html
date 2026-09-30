@@ -1,6 +1,60 @@
 {% extends 'core/base.html' %}{% load bron_tags %}{% block title %}Overview{% endblock %}{% block content %}
-<div class="page-heading"><div><div class="eyebrow">YOUR KNOWLEDGE, GROUNDED</div><h1>Hello, {{ user.first_name|default:user.username }}<span class="heading-dot">.</span></h1><p>Here’s where things stand across your client portfolio.</p></div><a class="button secondary" href="{% url 'queue' %}">{% icon 'queue' 17 %} Open review queue {% icon 'arrow' 16 %}</a></div>
-<div class="stats-grid"><div class="stat-card"><div class="stat-label">My clients <span class="stat-icon sage">{% icon 'clients' %}</span></div><div class="stat-value">{{ clients|length }}</div><div class="stat-foot">Your active portfolio</div></div><div class="stat-card"><div class="stat-label">Confirmed passages <span class="stat-icon sage">{% icon 'check' %}</span></div><div class="stat-value">{{ confirmed_count }}</div><div class="stat-foot"><span class="small-dot green"></span> Grounded in current sources</div></div><div class="stat-card"><div class="stat-label">Needs a closer look <span class="stat-icon amber">{% icon 'alert' %}</span></div><div class="stat-value">{{ review_count }}</div><div class="stat-foot">Passages with an open review</div></div><div class="stat-card"><div class="stat-label">Connected sources <span class="stat-icon blue">{% icon 'source' %}</span></div><div class="stat-value">{{ source_count }}</div><div class="stat-foot">Documents, agreements & threads</div></div></div>
-<div class="context-banner"><span class="banner-icon">{% icon 'leaf' 25 %}</span><div><strong>Shared knowledge. Client-specific context.</strong><p>Clients inherit relevant rules. Their exceptions stay visible, with a clear source and a named reviewer.</p></div><span class="banner-tag">A foundation for every answer</span></div>
-<div class="dashboard-grid"><section><div class="section-heading"><div><h2>My clients <span class="count-pill">{{ clients|length }}</span></h2><p>The right knowledge, in the right context.</p></div><a class="text-link" href="{% url 'clients' %}">View all {% icon 'arrow' 15 %}</a></div><div class="client-grid">{% for client in clients %}{% include 'core/partials/client_card.html' %}{% empty %}<div class="empty-state">{% icon 'clients' 32 %}<h3>No client files assigned</h3><p>Your assigned questions are available in the review queue.</p></div>{% endfor %}</div></section><aside class="dashboard-side"><div class="section-heading"><div><h2>On your radar</h2><p>Your next reviews.</p></div><span class="radar-dot"></span></div><div class="panel radar-panel">{% for doubt in queue %}<a class="radar-row" href="{% url 'doubt' doubt.pk %}"><span class="small-dot {% if doubt.kind == 'CONFLICT' %}red{% else %}orange{% endif %}"></span><div><span class="row-overline">{% if user.role != 'EXPERT' %}{{ doubt.pin.scope_name }}{% else %}Assigned question{% endif %}</span><strong>{% if user.role != 'EXPERT' %}{{ doubt.pin.title }}{% else %}{{ doubt.reason|truncatechars:100 }}{% endif %}</strong><p>{{ doubt.kind_label }}</p><small>Pending with {{ doubt.pending_with }}</small></div>{% icon 'arrow' 16 %}</a>{% empty %}<div class="quiet-state">{% icon 'check' 28 %}<strong>You’re all caught up.</strong><p>No reviews are currently assigned to you or your team.</p></div>{% endfor %}<a class="panel-footer" href="{% url 'queue' %}">View review queue {% icon 'arrow' 16 %}</a></div><div class="legend-panel"><span class="eyebrow">READ THE SIGNALS</span><div><span class="small-dot green"></span> Confirmed <small>Human checked</small></div><div><span class="small-dot orange"></span> Needs review <small>Assumptions changed</small></div><div><span class="small-dot yellow"></span> Open question <small>Waiting for an answer</small></div><div><span class="small-dot red"></span> Conflict <small>Human verified</small></div></div></aside></div>
-<section class="recent-section"><div class="section-heading"><div><h2>Recent activity</h2><p>A clear trail of what changed and who checked it.</p></div><a class="text-link" href="{% url 'activity' %}">View activity log {% icon 'arrow' 15 %}</a></div>{% include 'core/partials/events.html' %}</section>{% endblock %}
+<div class="page-heading">
+<div>
+<div class="eyebrow">YOUR KNOWLEDGE, GROUNDED</div>
+<h1>Hello, {{ user.first_name|default:user.username }}<span class="heading-dot">.</span></h1>
+<p>Here’s where things stand across your client portfolio.</p></div><a class="button secondary" href="{% url 'queue' %}">{% icon 'queue' 17 %} Open review queue {% icon 'arrow' 16 %}</a></div>
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-label">My clients <span class="stat-icon sage">{% icon 'clients' %}</span></div>
+<div class="stat-value">{{ clients|length }}</div>
+<div class="stat-foot">Your active portfolio</div></div>
+<div class="stat-card">
+<div class="stat-label">Confirmed passages <span class="stat-icon sage">{% icon 'check' %}</span></div>
+<div class="stat-value">{{ confirmed_count }}</div>
+<div class="stat-foot"><span class="small-dot green"></span> Grounded in current sources</div></div>
+<div class="stat-card">
+<div class="stat-label">Needs a closer look <span class="stat-icon amber">{% icon 'alert' %}</span></div>
+<div class="stat-value">{{ review_count }}</div>
+<div class="stat-foot">Passages with an open review</div></div>
+<div class="stat-card">
+<div class="stat-label">Connected sources <span class="stat-icon blue">{% icon 'source' %}</span></div>
+<div class="stat-value">{{ source_count }}</div>
+<div class="stat-foot">Documents, agreements & threads</div></div></div>
+<div class="context-banner"><span class="banner-icon">{% icon 'leaf' 25 %}</span>
+<div><strong>Shared knowledge. Client-specific context.</strong>
+<p>Clients inherit relevant rules. Their exceptions stay visible, with a clear source and a named reviewer.</p></div><span class="banner-tag">A foundation for every answer</span></div>
+<div class="dashboard-grid">
+<section>
+<div class="section-heading">
+<div>
+<h2>My clients <span class="count-pill">{{ clients|length }}</span></h2>
+<p>The right knowledge, in the right context.</p></div><a class="text-link" href="{% url 'clients' %}">View all {% icon 'arrow' 15 %}</a></div>
+<div class="client-grid">
+{% for client in clients %}{% include 'core/partials/client_card.html' %}{% empty %}<div class="empty-state">{% icon 'clients' 32 %}<h3>No client files assigned</h3>
+<p>Your assigned questions are available in the review queue.</p></div>
+{% endfor %}</div></section>
+<aside class="dashboard-side">
+<div class="section-heading">
+<div>
+<h2>On your radar</h2>
+<p>Your next reviews.</p></div><span class="radar-dot"></span></div>
+<div class="panel radar-panel">
+{% for doubt in queue %}<a class="radar-row" href="{% url 'doubt' doubt.pk %}"><span class="small-dot {% if doubt.kind == 'CONFLICT' %}red{% else %}orange{% endif %}"></span>
+<div><span class="row-overline">
+{% if user.role != 'EXPERT' %}{{ doubt.pin.scope_name }}{% else %}Assigned question{% endif %}</span><strong>
+{% if user.role != 'EXPERT' %}{{ doubt.pin.title }}{% else %}{{ doubt.reason|truncatechars:100 }}{% endif %}</strong>
+<p>{{ doubt.kind_label }}</p><small>Pending with {{ doubt.pending_with }}</small></div>{% icon 'arrow' 16 %}</a>{% empty %}<div class="quiet-state">{% icon 'check' 28 %}<strong>You’re all caught up.</strong>
+<p>No reviews are currently assigned to you or your team.</p></div>
+{% endfor %}<a class="panel-footer" href="{% url 'queue' %}">View review queue {% icon 'arrow' 16 %}</a></div>
+<div class="legend-panel"><span class="eyebrow">READ THE SIGNALS</span>
+<div><span class="small-dot green"></span> Confirmed <small>Human checked</small></div>
+<div><span class="small-dot orange"></span> Needs review <small>Assumptions changed</small></div>
+<div><span class="small-dot yellow"></span> Open question <small>Waiting for an answer</small></div>
+<div><span class="small-dot red"></span> Conflict <small>Human verified</small></div></div></aside></div>
+<section class="recent-section">
+<div class="section-heading">
+<div>
+<h2>Recent activity</h2>
+<p>A clear trail of what changed and who checked it.</p></div><a class="text-link" href="{% url 'activity' %}">View activity log {% icon 'arrow' 15 %}</a></div>{% include 'core/partials/events.html' %}</section>
+{% endblock %}

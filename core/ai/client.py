@@ -27,7 +27,9 @@ def request(task, data, schema):
     cached = AiCache.objects.filter(key=key).first()
     if cached:
         try:
-            return schema.model_validate(cached.output), "fixture" if model == FIXTURE_MODEL else "cache"
+            return schema.model_validate(
+                cached.output
+            ), "fixture" if model == FIXTURE_MODEL else "cache"
         except ValidationError:
             return None, "invalid"
     if settings.AI_MODE != "live":
@@ -37,16 +39,38 @@ def request(task, data, schema):
     try:
         from google import genai
         from google.genai import types
+
         prompt = (settings.BASE_DIR / "core/ai/prompts" / f"{task}.txt").read_text(encoding="utf-8")
-        with genai.Client(vertexai=True, project=os.environ["GCP_PROJECT"], location=os.getenv("GCP_LOCATION", "europe-west1"),
-                          http_options=types.HttpOptions(timeout=30000)) as client:
-            response = client.models.generate_content(model=model, contents=prompt + "\n<SOURCE_DATA>\n" +
-                json.dumps(data, ensure_ascii=False) + "\n</SOURCE_DATA>", config=types.GenerateContentConfig(
-                    system_instruction=SYSTEM_INSTRUCTION, temperature=0, response_mime_type="application/json",
-                    response_schema=schema, max_output_tokens=4096))
+        with genai.Client(
+            vertexai=True,
+            project=os.environ["GCP_PROJECT"],
+            location=os.getenv("GCP_LOCATION", "europe-west1"),
+            http_options=types.HttpOptions(timeout=30000),
+        ) as client:
+            response = client.models.generate_content(
+                model=model,
+                contents=prompt
+                + "\n<SOURCE_DATA>\n"
+                + json.dumps(data, ensure_ascii=False)
+                + "\n</SOURCE_DATA>",
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_INSTRUCTION,
+                    temperature=0,
+                    response_mime_type="application/json",
+                    response_schema=schema,
+                    max_output_tokens=4096,
+                ),
+            )
         parsed = schema.model_validate_json(response.text)
-        AiCache.objects.get_or_create(key=key, defaults={"task": task, "model": model,
-                                      "prompt_version": version, "output": parsed.model_dump()})
+        AiCache.objects.get_or_create(
+            key=key,
+            defaults={
+                "task": task,
+                "model": model,
+                "prompt_version": version,
+                "output": parsed.model_dump(),
+            },
+        )
         return parsed, "live"
     except Exception:
         # Neither source content nor model response is logged; failure cannot create false trust.

@@ -26,7 +26,13 @@ def test_confirm_and_stale_version_guard(seeded):
     perform(sarah, pin, "confirm", "Verified against the latest source", version_id=pin.version_id)
     assert pin.status == "CONFIRMED"
     with pytest.raises(Http404):
-        perform(User.objects.get(username="system"), pin, "confirm", "Checked", version_id=pin.version_id)
+        perform(
+            User.objects.get(username="system"),
+            pin,
+            "confirm",
+            "Checked",
+            version_id=pin.version_id,
+        )
 
 
 def test_dismiss_escalate_and_supersede(seeded):
@@ -35,7 +41,13 @@ def test_dismiss_escalate_and_supersede(seeded):
     sarah = User.objects.get(username="sarah")
     with pytest.raises(ValidationError):
         perform(sarah, old, "dismiss", "Ignore", doubt=old.doubts.get(kind="EXPIRED"))
-    perform(sarah, old, "escalate", "Confirmed contradictory deadlines", doubt=old.doubts.get(kind="POSSIBLE_CONFLICT"))
+    perform(
+        sarah,
+        old,
+        "escalate",
+        "Confirmed contradictory deadlines",
+        doubt=old.doubts.get(kind="POSSIBLE_CONFLICT"),
+    )
     assert old.status == "CONFLICT"
     perform(sarah, old, "supersede", "Replaced by current instructions", related_pin=new)
     old.refresh_from_db()
@@ -45,9 +57,12 @@ def test_dismiss_escalate_and_supersede(seeded):
 
 def test_expert_has_question_only_access(seeded):
     from core import authz
+
     pin = Source.objects.get(external_id="PEETERS-EXCEPTION").pins.get()
     expert = User.objects.get(username="anne")
-    question = create_doubt(pin, "QUESTION", "Please check this passage", assignee_user=expert, assignee_team=None)
+    question = create_doubt(
+        pin, "QUESTION", "Please check this passage", assignee_user=expert, assignee_team=None
+    )
     assert authz.can_read_doubt(expert, question)
     assert not authz.can_read_client(expert, pin.client)
     perform(expert, pin, "answer", "Please refer this to the Belgian team.", doubt=question)

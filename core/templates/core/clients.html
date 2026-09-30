@@ -1,1 +1,11 @@
-{% extends 'core/base.html' %}{% block title %}My clients{% endblock %}{% block breadcrumb %}My clients{% endblock %}{% block content %}<div class="page-heading"><div><span class="eyebrow">YOUR PORTFOLIO</span><h1>My clients<span class="heading-dot">.</span></h1><p>Open a client file to see the knowledge that applies.</p></div><span class="subtle-pill">{{ clients|length }} clients</span></div><form class="filter-bar" method="get"><label for="country">Country</label><select name="country" id="country"><option value="">All countries</option><option value="BE" {% if country == 'BE' %}selected{% endif %}>Belgium</option><option value="NL" {% if country == 'NL' %}selected{% endif %}>Netherlands</option><option value="LU" {% if country == 'LU' %}selected{% endif %}>Luxembourg</option></select><button class="button small secondary">Apply</button></form><div class="client-grid full-grid">{% for client in clients %}{% include 'core/partials/client_card.html' %}{% empty %}<div class="empty-state"><h3>No clients in this view</h3><p>Try another country or check your assigned portfolio.</p></div>{% endfor %}</div>{% endblock %}
+{% extends 'core/base.html' %}{% block title %}My clients{% endblock %}{% block breadcrumb %}My clients{% endblock %}{% block content %}<div class="page-heading">
+<div><span class="eyebrow">YOUR PORTFOLIO</span>
+<h1>My clients<span class="heading-dot">.</span></h1>
+<p>Open a client file to see the knowledge that applies.</p></div><span class="subtle-pill">{{ clients|length }} clients</span></div>
+<form class="filter-bar" method="get"><label for="country">Country</label><select name="country" id="country"><option value="">All countries</option><option value="BE" {% if country == 'BE' %}selected{% endif %}>Belgium</option><option value="NL" {% if country == 'NL' %}selected{% endif %}>Netherlands</option><option value="LU" {% if country == 'LU' %}selected{% endif %}>Luxembourg</option></select><button class="button small secondary">Apply</button></form>
+<div class="client-grid full-grid">
+{% for client in clients %}{% include 'core/partials/client_card.html' %}{% empty %}<div class="empty-state">
+<h3>No clients in this view</h3>
+<p>Try another country or check your assigned portfolio.</p></div>
+{% endfor %}</div>
+{% endblock %}

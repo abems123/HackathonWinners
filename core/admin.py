@@ -1,6 +1,18 @@
 from django.contrib import admin
 
-from .models import AiCache, AuditEvent, Client, Doubt, Layer, Pin, Source, SourceVersion, Team, Topic, User
+from .models import (
+    AiCache,
+    AuditEvent,
+    Client,
+    Doubt,
+    Layer,
+    Pin,
+    Source,
+    SourceVersion,
+    Team,
+    Topic,
+    User,
+)
 
 
 def admin_permission(request):
@@ -23,5 +35,17 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
 
 # Domain mutations go through audited services, not generic admin forms.
-for model in [Team, User, Layer, Client, Topic, Source, SourceVersion, Pin, Doubt, AuditEvent, AiCache]:
+for model in [
+    Team,
+    User,
+    Layer,
+    Client,
+    Topic,
+    Source,
+    SourceVersion,
+    Pin,
+    Doubt,
+    AuditEvent,
+    AiCache,
+]:
     admin.site.register(model, ReadOnlyAdmin)

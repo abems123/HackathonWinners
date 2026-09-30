@@ -1,0 +1,2 @@
+<p class="effective-range">Effective from {{ pin.version.effective_from|date:'j M Y' }}{% if pin.version.effective_to %} until {{ pin.version.effective_to|date:'j M Y' }}{% endif %}{% if pin.valid_until %} · Review expiry {{ pin.valid_until|date:'j M Y' }}{% endif %}{% if pin.source.latest.pk != pin.version_id %}<span>A newer version is ingested, effective from {{ pin.source.latest.effective_from|date:'j M Y' }}. Review the source before relying on this passage.</span>
+{% endif %}</p>

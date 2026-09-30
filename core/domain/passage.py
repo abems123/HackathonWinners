@@ -16,5 +16,5 @@ def anchor(content, quote):
     start = content.index(quote)
     # Paragraph-local context allows unrelated paragraphs to move safely.
     before = content[:start].split("\n\n")[-1]
-    after = content[start + len(quote):].split("\n\n")[0]
+    after = content[start + len(quote) :].split("\n\n")[0]
     return before[-100:], quote, after[:100]

@@ -2,6 +2,8 @@
 
 Bron brings shared procedures, client context and human review into one workspace. Select a client and a topic to see source-backed passages, their current trust status, and the person responsible for resolving uncertainty.
 
+For Claude or another developer continuing this project, read [README_CLAUDE.md](README_CLAUDE.md) for the architecture, file map, invariants and verification workflow.
+
 **All people, clients, documents and dates in the demonstration are fictional. No real SD Worx data is used.**
 
 ## Run locally

@@ -3,5 +3,8 @@ def matches(rule, profile):
 
 
 def scope_reason(rule, profile):
-    return "; ".join(f"{key}: {value} (client: {profile.get(key, 'not set')})"
-                     for key, value in rule.items() if profile.get(key) != value)
+    return "; ".join(
+        f"{key}: {value} (client: {profile.get(key, 'not set')})"
+        for key, value in rule.items()
+        if profile.get(key) != value
+    )

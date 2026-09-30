@@ -12,11 +12,20 @@ pytestmark = pytest.mark.django_db
 def test_assigned_owner_can_answer_question(seeded, client):
     pin = Source.objects.get(external_id="CORRECTION-V3").pins.get()
     owner = User.objects.get(username="sarah")
-    question = create_doubt(pin, "QUESTION", "Please clarify this deadline", assignee_user=owner, assignee_team=None)
+    question = create_doubt(
+        pin, "QUESTION", "Please clarify this deadline", assignee_user=owner, assignee_team=None
+    )
     client.force_login(owner)
     page = client.get(reverse("doubt", args=[question.pk]))
     assert b'value="answer"' in page.content
-    response = client.post(reverse("action", args=[pin.pk]), {"action": "answer", "reason": "The current deadline is the 25th.", "doubt_id": question.pk})
+    response = client.post(
+        reverse("action", args=[pin.pk]),
+        {
+            "action": "answer",
+            "reason": "The current deadline is the 25th.",
+            "doubt_id": question.pk,
+        },
+    )
     assert response.status_code == 302
     question.refresh_from_db()
     assert question.status == "RESOLVED"
@@ -37,7 +46,14 @@ def test_new_exception_needs_explicit_confirmation(seeded):
     user = User.objects.get(username="lotte")
     client = Client.objects.get(name="Bakkerij Janssens")
     pin = Source.objects.get(external_id="CORRECTION-V3").pins.get()
-    perform(user, pin, "add_exception", "Written client agreement", client=client, quote="Bakkerij corrections are due by the 22nd.")
+    perform(
+        user,
+        pin,
+        "add_exception",
+        "Written client agreement",
+        client=client,
+        quote="Bakkerij corrections are due by the 22nd.",
+    )
     exception = pin.exceptions.get(client=client)
     assert exception.status == "NEEDS_REVIEW"
     assert exception.confirmed_by_id is None

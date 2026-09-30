@@ -1,1 +1,31 @@
-{% extends 'core/base.html' %}{% load bron_tags %}{% block title %}Change impact{% endblock %}{% block breadcrumb %}<a href="{% url 'source' source.pk %}">Sources</a> <span>/</span> Change impact{% endblock %}{% block content %}<div class="page-heading"><div><span class="eyebrow">THE RIPPLE IS VISIBLE</span><h1>{% if summary.duplicate %}Already up to date{% else %}One change. Clear impact{% endif %}<span class="heading-dot">.</span></h1><p>{{ source.title }} · v{{ version.number }} · Effective from {{ version.effective_from|date:'j F Y' }}</p></div><a class="button secondary" href="{% url 'source' source.pk %}">Back to source</a></div>{% if summary.duplicate %}<div class="notice success">{% icon 'check' %} This content was already ingested. No duplicate reviews were created.</div>{% else %}<div class="stats-grid three"><div class="stat-card"><span class="stat-label">Unchanged passages</span><div class="stat-value">{{ summary.unchanged }}</div><div class="stat-foot"><span class="small-dot green"></span> Original confirmation retained</div></div><div class="stat-card"><span class="stat-label">Passages to review</span><div class="stat-value">{{ summary.modified }}</div><div class="stat-foot"><span class="small-dot orange"></span> Routed to the responsible owner</div></div><div class="stat-card"><span class="stat-label">Dependent exceptions</span><div class="stat-value">{{ summary.exceptions }}</div><div class="stat-foot">Client agreements reopened</div></div></div><div class="context-banner"><span class="banner-icon">{% icon 'link' 26 %}</span><div><strong>Review the change once. Keep client exceptions in view.</strong><p>Clients inheriting the shared layer do not get duplicate doubts. Their status updates directly from the source.</p></div></div><div class="section-heading"><h2>Passage-by-passage impact</h2></div>{% for item in summary.items %}<div class="panel ripple-item"><div><h3><a href="{% url 'pin' item.pin.pk %}">{{ item.pin.title }}</a></h3><span class="badge {% if item.outcome == 'UNCHANGED' %}CONFIRMED{% else %}NEEDS_REVIEW{% endif %}">{{ item.outcome|title }}</span></div>{% if item.outcome != 'UNCHANGED' %}<div class="diff-grid"><div><span class="label">PREVIOUS PASSAGE</span><blockquote>{{ item.before }}</blockquote></div><div><span class="label">NEW CANDIDATE · HUMAN REVIEW REQUIRED</span><blockquote>{{ item.after|default:'No unique passage found' }}</blockquote></div></div>{% endif %}</div>{% endfor %}<a class="button primary" href="{% url 'queue' %}">Open review queue {% icon 'arrow' 16 %}</a>{% endif %}{% endblock %}
+{% extends 'core/base.html' %}{% load bron_tags %}{% block title %}Change impact{% endblock %}{% block breadcrumb %}<a href="{% url 'source' source.pk %}">Sources</a> <span>/</span> Change impact{% endblock %}{% block content %}<div class="page-heading">
+<div><span class="eyebrow">THE RIPPLE IS VISIBLE</span>
+<h1>
+{% if summary.duplicate %}Already up to date{% else %}One change. Clear impact{% endif %}<span class="heading-dot">.</span></h1>
+<p>{{ source.title }} · v{{ version.number }} · Effective from {{ version.effective_from|date:'j F Y' }}</p></div><a class="button secondary" href="{% url 'source' source.pk %}">Back to source</a></div>
+{% if summary.duplicate %}<div class="notice success">{% icon 'check' %} This content was already ingested. No duplicate reviews were created.</div>{% else %}<div class="stats-grid three">
+<div class="stat-card"><span class="stat-label">Unchanged passages</span>
+<div class="stat-value">{{ summary.unchanged }}</div>
+<div class="stat-foot"><span class="small-dot green"></span> Original confirmation retained</div></div>
+<div class="stat-card"><span class="stat-label">Passages to review</span>
+<div class="stat-value">{{ summary.modified }}</div>
+<div class="stat-foot"><span class="small-dot orange"></span> Routed to the responsible owner</div></div>
+<div class="stat-card"><span class="stat-label">Dependent exceptions</span>
+<div class="stat-value">{{ summary.exceptions }}</div>
+<div class="stat-foot">Client agreements reopened</div></div></div>
+<div class="context-banner"><span class="banner-icon">{% icon 'link' 26 %}</span>
+<div><strong>Review the change once. Keep client exceptions in view.</strong>
+<p>Clients inheriting the shared layer do not get duplicate doubts. Their status updates directly from the source.</p></div></div>
+<div class="section-heading">
+<h2>Passage-by-passage impact</h2></div>
+{% for item in summary.items %}<div class="panel ripple-item">
+<div>
+<h3><a href="{% url 'pin' item.pin.pk %}">{{ item.pin.title }}</a></h3><span class="badge {% if item.outcome == 'UNCHANGED' %}CONFIRMED{% else %}NEEDS_REVIEW{% endif %}">{{ item.outcome|title }}</span></div>
+{% if item.outcome != 'UNCHANGED' %}<div class="diff-grid">
+<div><span class="label">PREVIOUS PASSAGE</span>
+<blockquote>{{ item.before }}</blockquote></div>
+<div><span class="label">NEW CANDIDATE · HUMAN REVIEW REQUIRED</span>
+<blockquote>{{ item.after|default:'No unique passage found' }}</blockquote></div></div>
+{% endif %}</div>
+{% endfor %}<a class="button primary" href="{% url 'queue' %}">Open review queue {% icon 'arrow' 16 %}</a>
+{% endif %}{% endblock %}

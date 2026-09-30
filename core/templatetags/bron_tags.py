@@ -4,6 +4,49 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+
+@register.filter(name="render_markdown")
+def render_markdown(value):
+    """Format evidence for reading; sanitisation is mandatory for uploaded sources."""
+    import bleach
+    import markdown
+
+    html = markdown.markdown(str(value or ""), extensions=["tables", "fenced_code"])
+    safe_html = bleach.clean(
+        html,
+        tags={
+            "p",
+            "br",
+            "hr",
+            "strong",
+            "em",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "ul",
+            "ol",
+            "li",
+            "blockquote",
+            "pre",
+            "code",
+            "a",
+            "table",
+            "thead",
+            "tbody",
+            "tr",
+            "th",
+            "td",
+        },
+        attributes={"a": ["href", "title"]},
+        protocols={"https", "http", "mailto"},
+        strip=True,
+    )
+    return mark_safe(safe_html)
+
+
 @register.simple_tag
 def icon(name, size=20):
     paths = {
@@ -25,4 +68,9 @@ def icon(name, size=20):
         "menu": '<path d="M4 6h16M4 12h16M4 18h16"/>',
     }
     # Only static developer-owned SVG strings are marked safe.
-    return format_html('<svg width="{}" height="{}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{}</svg>', size, size, mark_safe(paths.get(name, paths["source"])))
+    return format_html(
+        '<svg width="{}" height="{}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{}</svg>',
+        size,
+        size,
+        mark_safe(paths.get(name, paths["source"])),
+    )

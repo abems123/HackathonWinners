@@ -23,5 +23,8 @@ def load_fixtures():
         return 0
     entries = json.loads(path.read_text(encoding="utf-8"))["entries"]
     for row in entries:
-        AiCache.objects.get_or_create(key=row["key"], defaults={k: row[k] for k in ("task", "model", "prompt_version", "output")})
+        AiCache.objects.get_or_create(
+            key=row["key"],
+            defaults={k: row[k] for k in ("task", "model", "prompt_version", "output")},
+        )
     return len(entries)

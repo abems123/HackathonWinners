@@ -23,16 +23,22 @@ def test_reanchor_outcomes():
 def test_real_ripple_and_repeat(seeded):
     source = Source.objects.get(external_id="TELEWORK-PC200")
     _, body = read_markdown(settings.BASE_DIR / "seed/sources/telework-v2.md")
-    version, result = upload_version(User.objects.get(username="sarah"), source, body, datetime(2027, 1, 1, tzinfo=timezone.utc))
+    version, result = upload_version(
+        User.objects.get(username="sarah"), source, body, datetime(2027, 1, 1, tzinfo=timezone.utc)
+    )
     assert (result["unchanged"], result["modified"], result["exceptions"]) == (8, 1, 1)
     assert source.pins.filter(confirmed_version=version).count() == 8
     assert Doubt.objects.filter(kind="SOURCE_CHANGED").count() == 2
     exception = Source.objects.get(external_id="PEETERS-EXCEPTION").pins.get()
     assert exception.status == "NEEDS_REVIEW"
-    _, repeat = upload_version(User.objects.get(username="sarah"), source, body, datetime(2027, 1, 1, tzinfo=timezone.utc))
+    _, repeat = upload_version(
+        User.objects.get(username="sarah"), source, body, datetime(2027, 1, 1, tzinfo=timezone.utc)
+    )
     assert repeat["duplicate"]
     assert Doubt.objects.filter(kind="SOURCE_CHANGED").count() == 2
-    assert not Doubt.objects.filter(pin__client__name="Bakkerij Janssens", kind="SOURCE_CHANGED").exists()
+    assert not Doubt.objects.filter(
+        pin__client__name="Bakkerij Janssens", kind="SOURCE_CHANGED"
+    ).exists()
 
 
 @pytest.mark.django_db

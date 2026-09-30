@@ -19,8 +19,11 @@ class Team(models.Model):
 
 
 class User(AbstractUser):
-    role = models.CharField(max_length=20, choices=[(x, x.title()) for x in
-                            ("CONSULTANT", "OWNER", "ADMIN", "EXPERT", "SYSTEM")], default="CONSULTANT")
+    role = models.CharField(
+        max_length=20,
+        choices=[(x, x.title()) for x in ("CONSULTANT", "OWNER", "ADMIN", "EXPERT", "SYSTEM")],
+        default="CONSULTANT",
+    )
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.PROTECT)
 
     @property
@@ -73,8 +76,15 @@ class Source(models.Model):
     knowledge_channel = models.BooleanField(default=False)
 
     class Meta:
-        constraints = [models.CheckConstraint(condition=(Q(layer__isnull=False, client__isnull=True) |
-                       Q(layer__isnull=True, client__isnull=False)), name="source_one_scope")]
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    Q(layer__isnull=False, client__isnull=True)
+                    | Q(layer__isnull=True, client__isnull=False)
+                ),
+                name="source_one_scope",
+            )
+        ]
 
     @property
     def scope_name(self):
@@ -99,8 +109,12 @@ class SourceVersion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["source", "content_hash"], name="unique_source_content"),
-                       models.UniqueConstraint(fields=["source", "number"], name="unique_source_version")]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["source", "content_hash"], name="unique_source_content"
+            ),
+            models.UniqueConstraint(fields=["source", "number"], name="unique_source_version"),
+        ]
 
     def save(self, *args, **kwargs):
         self.content_hash = hashlib.sha256(self.content.encode()).hexdigest()
@@ -124,21 +138,32 @@ class Pin(models.Model):
     suffix = models.TextField(blank=True)
     passage_hash = models.CharField(max_length=64)
     origin = models.CharField(max_length=20, default="HUMAN")
-    confirmed_version = models.ForeignKey(SourceVersion, null=True, blank=True, on_delete=models.PROTECT,
-                                          related_name="confirmations")
+    confirmed_version = models.ForeignKey(
+        SourceVersion, null=True, blank=True, on_delete=models.PROTECT, related_name="confirmations"
+    )
     confirmed_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     confirmed_at = models.DateTimeField(null=True, blank=True)
     confirmed_profile_version = models.PositiveIntegerField(null=True, blank=True)
     valid_until = models.DateTimeField(null=True, blank=True)
-    base = models.ForeignKey("self", null=True, blank=True, on_delete=models.PROTECT, related_name="exceptions")
+    base = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.PROTECT, related_name="exceptions"
+    )
     base_passage_hash = models.CharField(max_length=64, null=True, blank=True)
-    superseded_by = models.ForeignKey("self", null=True, blank=True, on_delete=models.PROTECT,
-                                     related_name="supersedes")
+    superseded_by = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.PROTECT, related_name="supersedes"
+    )
     excluded = models.BooleanField(default=False)
 
     class Meta:
-        constraints = [models.CheckConstraint(condition=(Q(layer__isnull=False, client__isnull=True) |
-                       Q(layer__isnull=True, client__isnull=False)), name="pin_one_scope")]
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    Q(layer__isnull=False, client__isnull=True)
+                    | Q(layer__isnull=True, client__isnull=False)
+                ),
+                name="pin_one_scope",
+            )
+        ]
 
     def save(self, *args, **kwargs):
         self.passage_hash = passage_hash(self.prefix, self.quote, self.suffix)
@@ -154,12 +179,20 @@ class Pin(models.Model):
 
     def facts(self):
         latest = self.source.latest
-        return PinFacts(self.origin, "CLIENT" if self.client_id else "LAYER",
-                        self.confirmed_version_id, latest.pk if latest and not self.superseded_by_id and not self.excluded else None,
-                        self.version.effective_to, self.valid_until, self.confirmed_profile_version,
-                        self.client.profile_version if self.client_id else None, self.passage_hash,
-                        self.base.facts() if self.base_id else None, self.base_passage_hash,
-                        frozenset(self.base.open_kinds) if self.base_id else frozenset())
+        return PinFacts(
+            self.origin,
+            "CLIENT" if self.client_id else "LAYER",
+            self.confirmed_version_id,
+            latest.pk if latest and not self.superseded_by_id and not self.excluded else None,
+            self.version.effective_to,
+            self.valid_until,
+            self.confirmed_profile_version,
+            self.client.profile_version if self.client_id else None,
+            self.passage_hash,
+            self.base.facts() if self.base_id else None,
+            self.base_passage_hash,
+            frozenset(self.base.open_kinds) if self.base_id else frozenset(),
+        )
 
     @property
     def status(self):
@@ -167,13 +200,21 @@ class Pin(models.Model):
 
     @property
     def status_label(self):
-        return {"CONFIRMED": "Confirmed", "NEEDS_REVIEW": "Needs review", "UNCERTAIN": "Open question",
-                "CONFLICT": "Conflict"}[self.status]
+        return {
+            "CONFIRMED": "Confirmed",
+            "NEEDS_REVIEW": "Needs review",
+            "UNCERTAIN": "Open question",
+            "CONFLICT": "Conflict",
+        }[self.status]
 
     @property
     def explanation(self):
-        return explanation(self.status, self.confirmed_by.display_name if self.confirmed_by_id else "nobody",
-                           self.version.number, self.open_kinds)
+        return explanation(
+            self.status,
+            self.confirmed_by.display_name if self.confirmed_by_id else "nobody",
+            self.version.number,
+            self.open_kinds,
+        )
 
     def __str__(self):
         return self.title
@@ -186,7 +227,9 @@ class Doubt(models.Model):
     status = models.CharField(max_length=10, default="OPEN")
     assignee_user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     assignee_team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.PROTECT)
-    related_pin = models.ForeignKey(Pin, null=True, blank=True, on_delete=models.PROTECT, related_name="related_doubts")
+    related_pin = models.ForeignKey(
+        Pin, null=True, blank=True, on_delete=models.PROTECT, related_name="related_doubts"
+    )
     dedupe_key = models.CharField(max_length=150, null=True, blank=True)
     severity = models.PositiveSmallIntegerField(default=2)
     due_date = models.DateField(null=True, blank=True)
@@ -197,9 +240,18 @@ class Doubt(models.Model):
 
     class Meta:
         ordering = ["severity", "due_date", "created_at"]
-        constraints = [models.CheckConstraint(condition=(Q(assignee_user__isnull=False, assignee_team__isnull=True) |
-                       Q(assignee_user__isnull=True, assignee_team__isnull=False)), name="doubt_one_assignee"),
-                       models.UniqueConstraint(fields=["dedupe_key"], condition=Q(status="OPEN"), name="unique_open_doubt")]
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    Q(assignee_user__isnull=False, assignee_team__isnull=True)
+                    | Q(assignee_user__isnull=True, assignee_team__isnull=False)
+                ),
+                name="doubt_one_assignee",
+            ),
+            models.UniqueConstraint(
+                fields=["dedupe_key"], condition=Q(status="OPEN"), name="unique_open_doubt"
+            ),
+        ]
 
     @property
     def pending_with(self):
