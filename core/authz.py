@@ -68,8 +68,10 @@ def can_read_doubt(user, doubt):
 
 
 def can_resolve_doubt(user, doubt):
+    if human(user) and doubt.kind == "QUESTION" and doubt.assignee_user_id == user.pk:
+        return True
     if user.role == "EXPERT":
-        return human(user) and doubt.kind == "QUESTION" and doubt.assignee_user_id == user.pk
+        return False
     return can_change_pin(user, doubt.pin)
 
 

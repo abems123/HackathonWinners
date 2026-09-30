@@ -105,9 +105,11 @@ def queue(request):
     return render(request, "core/queue.html", {"section": "queue", "doubts": doubts, "kind": kind})
 
 
-def prepare_action_form(user, pin, data=None, initial=None, expert_only=False):
+def prepare_action_form(user, pin, data=None, initial=None, expert_only=False, doubt=None):
     form = ActionForm(data, initial=initial)
     actions = {"answer"} if expert_only else {"ask", "source_outdated"}
+    if doubt and doubt.kind == "QUESTION" and authz.can_resolve_doubt(user, doubt):
+        actions.add("answer")
     if not expert_only and authz.can_change_pin(user, pin):
         actions |= {"confirm", "supersede", "dismiss", "escalate"}
         if pin.client_id:
@@ -139,7 +141,7 @@ def doubt_detail(request, pk):
     doubt = get_object_or_404(Doubt, pk=pk)
     authz.require(authz.can_read_doubt(request.user, doubt))
     restricted = not authz.can_read_pin(request.user, doubt.pin)
-    form = prepare_action_form(request.user, doubt.pin, expert_only=restricted,
+    form = prepare_action_form(request.user, doubt.pin, expert_only=restricted, doubt=doubt,
                               initial={"action": "answer" if restricted else "confirm", "version_id": doubt.pin.source.latest.pk})
     if doubt.related_pin_id and not authz.can_read_pin(request.user, doubt.related_pin):
         doubt.related_pin = None
@@ -155,7 +157,7 @@ def action(request, pk):
     doubt = get_object_or_404(Doubt, pk=doubt_id, pin=pin) if doubt_id else None
     restricted = not authz.can_read_pin(request.user, pin)
     authz.require(not restricted or (doubt is not None and authz.can_read_doubt(request.user, doubt)))
-    form = prepare_action_form(request.user, pin, request.POST, expert_only=restricted)
+    form = prepare_action_form(request.user, pin, request.POST, expert_only=restricted, doubt=doubt)
     target = reverse("doubt", args=[doubt.pk]) if doubt else reverse("pin", args=[pin.pk])
     if form.is_valid():
         try:

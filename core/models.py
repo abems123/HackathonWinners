@@ -155,7 +155,7 @@ class Pin(models.Model):
     def facts(self):
         latest = self.source.latest
         return PinFacts(self.origin, "CLIENT" if self.client_id else "LAYER",
-                        self.confirmed_version_id, latest.pk if latest else None,
+                        self.confirmed_version_id, latest.pk if latest and not self.superseded_by_id and not self.excluded else None,
                         self.version.effective_to, self.valid_until, self.confirmed_profile_version,
                         self.client.profile_version if self.client_id else None, self.passage_hash,
                         self.base.facts() if self.base_id else None, self.base_passage_hash,

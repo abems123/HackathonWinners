@@ -20,7 +20,7 @@ Copy-Item .env.example .env
 
 On macOS/Linux use `.venv/bin/python` and `cp .env.example .env` instead. Open http://127.0.0.1:8000.
 
-Sign in as `lotte` (consultant), `sarah` (layer owner), `sofie` (corpus owner), `pieter` (De Kroon consultant), `anne` (restricted expert), or `admin` (administration). Demo password: `Bron-demo-2026!`. Full details: [seed/README.md](../seed/README.md).
+Sign in as `lotte` (consultant), `sarah` (layer owner), `sofie` (corpus owner), `pieter` (De Kroon consultant), `anne` (restricted expert), or `admin` (administration). Demo password: `Bron-demo-2026!`. Full details: [seed/README.md](seed/README.md).
 
 Once dependencies are installed, the synthetic demo works offline with no cloud credentials. Styles and HTMX are checked in and served locally.
 
@@ -57,6 +57,10 @@ git diff --check
 
 Tests use isolated in-memory SQLite and fast test-only password hashing. Normal accounts use Django's production password hasher.
 
+`requirements.lock` records the verified package versions. For browser verification, install `requirements-browser.txt`, then run `python tools/verify_browser.py`. This starts a separate temporary database and server, exercises seven Chrome workflows, and writes screenshots and a report to `output/browser/` without changing your working demo. Chrome must be installed; alternatively run `python -m playwright install chromium` and set `BRON_BROWSER_CHANNEL=chromium`.
+
+The eight questions in `data/eval_questions.json` have semantic regression checks in `tests/test_corpus_eval.py`. GitHub Actions runs the suite and browser checks on each push.
+
 ## Operations
 
 `python manage.py seed` is repeatable and preserves decisions. `python manage.py seed --reset` replaces the demo database; it is allowed only in debug mode. `python manage.py sweep` generates deduplicated expiry reviews. The actual clock determines status; demo dates are not frozen.
@@ -67,7 +71,7 @@ To rebuild styles on Windows, run `tools/build_css.ps1`; it downloads Tailwind's
 
 ## Design and remaining external work
 
-The original repository contained an implementation plan referencing a missing product specification. It is preserved in [docs/implementation-plan.md](implementation-plan.md). Conservative gap-filling decisions are in [docs/decisions.md](decisions.md).
+The original repository contained an implementation plan referencing a missing product specification. It is preserved in [docs/implementation-plan.md](docs/implementation-plan.md). Conservative gap-filling decisions are in [docs/decisions.md](docs/decisions.md). Render deployment instructions are in [docs/deployment.md](docs/deployment.md).
 
 Structured Vertex AI integration is implemented with three validated tasks: extract claims, compare claims and triage changes. Source owners can use **Check evidence** on a source. Cache mode uses explicitly labelled synthetic fixtures, works offline, and never invents model provenance. Quote validation rejects hallucinated evidence. Invalid results create a manual review without an AI label.
 

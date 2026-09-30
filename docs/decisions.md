@@ -13,3 +13,6 @@ The repository originally contained only an implementation plan labelled README.
 - Audit events are append-only through the application and admin. Database administrators remain capable of altering the database; external immutable archival is a deployment responsibility.
 - AI cache fixtures are explicitly marked synthetic until generated with real Vertex credentials. No fabricated model provenance or Aikido results are claimed.
 - Aikido screenshots, a submitted demo video, and real Vertex cache generation require external accounts/credentials and are tracked separately from the working website.
+- Layer knowledge is organisation-wide and readable by consultants/owners/admins, so wrong-country material can be explained as outside scope. Client sources and exceptions require an explicit client assignment or oversight of that client's subscribed layer. A layer-owner role alone does not grant access to every client.
+- A pin that is excluded or superseded cannot hold its assumptions. Dependent exceptions therefore fail safe even if no ripple doubt has been written yet.
+- Assigned questions can be answered by the assigned human regardless of their normal client access. Expert dashboard/queue entries omit client and source labels; the restricted question view contains only the question and exact passage.
