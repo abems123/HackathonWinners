@@ -1,0 +1,21 @@
+teams: [Payroll BE, Payroll Consultants BE, Payroll Operations BE, Payroll Operations NL, Payroll Operations LU, Finance BE]
+users:
+  - {username: lotte, first_name: Lotte, last_name: Vermeulen, role: CONSULTANT, team: Payroll Consultants BE}
+  - {username: sarah, first_name: Sarah, last_name: Peeters, role: OWNER, team: Payroll BE}
+  - {username: admin, first_name: Demo, last_name: Administrator, role: ADMIN, team: Payroll BE}
+  - {username: system, first_name: System, last_name: Worker, role: SYSTEM, team: Payroll BE}
+clients:
+  - {name: Bakkerij Janssens, sector: Food & hospitality, initials: BJ, color: sage, country: BE, pc: '200', consultants: [lotte], close: '2026-10-07'}
+  - {name: Brouwerij De Kroon, sector: Brewing, initials: DK, color: amber, country: BE, pc: '200', consultants: [lotte, pieter], close: '2026-10-09'}
+  - {name: Garage Verhaeghe, sector: Automotive, initials: GV, color: blue, country: BE, pc: '200', consultants: [lotte, jens], close: '2026-10-07'}
+  - {name: Garage Peeters, sector: Automotive, initials: GP, color: lilac, country: BE, pc: '200', consultants: [lotte], close: '2026-10-07'}
+  - {name: Atelier Noord, sector: Design studio, initials: AN, color: rose, country: NL, pc: '', consultants: [daan], close: '2026-10-16'}
+  - {name: Maison Laurent, sector: Retail, initials: ML, color: blue, country: LU, pc: '', consultants: [lotte], close: '2026-10-12'}
+topics:
+  - {slug: payroll-input, name: Payroll input, description: 'Submission deadlines, calendars and client exceptions'}
+  - {slug: correction-deadline, name: Correction deadline, description: Late changes and correction runs}
+  - {slug: telework, name: Telework allowance, description: 'Reimbursements, eligibility and sector rules'}
+  - {slug: handover, name: Client handover, description: Portfolio transitions and onboarding}
+  - {slug: payslips, name: Payslip publication, description: Publication dates and employee access}
+  - {slug: expenses, name: Expense claims, description: Submission deadlines and approvals}
+  - {slug: absences, name: Absence registration, description: Approval and payroll processing}
