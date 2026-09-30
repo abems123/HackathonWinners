@@ -67,7 +67,7 @@ The eight questions in `data/eval_questions.json` have semantic regression check
 
 `python manage.py seed` is repeatable and preserves decisions. `python manage.py seed --reset` replaces the demo database; it is allowed only in debug mode. `python manage.py sweep` generates deduplicated expiry reviews. The actual clock determines status; demo dates are not frozen.
 
-Production defaults to `DJANGO_DEBUG=False`, secure cookies, HTTPS redirection and HSTS. Set `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`, and optionally `DATABASE_URL` for PostgreSQL, and run `collectstatic`. Never deploy seeded demo passwords or commit `.env`, a database, or cloud credentials. Database-level immutable archival is separate from the application's append-only audit protections.
+Production defaults to `DJANGO_DEBUG=False`, secure cookies, HTTPS redirection and HSTS. Set `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`, and optionally `DATABASE_URL` for PostgreSQL, and run `collectstatic`. The Render demo seeds fictional accounts with the public demo password (disable with `SEED_DEMO=false`). Never use seeded demo passwords with real data, and never commit `.env`, a database, or cloud credentials. Database-level immutable archival is separate from the application's append-only audit protections.
 
 To rebuild styles on Windows, run `tools/build_css.ps1`; it downloads Tailwind's pinned standalone compiler. Normal startup needs no CSS build or Node toolchain.
 
