@@ -257,8 +257,10 @@ def doubt_detail(request, pk):
 @require_POST
 def action(request, pk):
     pin = get_object_or_404(Pin, pk=pk)
-    doubt_id = request.POST.get("doubt_id")
-    doubt = get_object_or_404(Doubt, pk=doubt_id, pin=pin) if doubt_id else None
+    doubt_id = request.POST.get("doubt_id", "").strip()
+    if doubt_id and not doubt_id.isdigit():
+        raise Http404("Not found")
+    doubt = get_object_or_404(Doubt, pk=int(doubt_id), pin=pin) if doubt_id else None
     restricted = not authz.can_read_pin(request.user, pin)
     authz.require(
         not restricted or (doubt is not None and authz.can_read_doubt(request.user, doubt))

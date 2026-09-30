@@ -35,3 +35,15 @@ def test_login_next_rejects_external_redirect(seeded, client):
     )
     assert response.status_code == 302
     assert response["Location"] == reverse("home")
+
+
+@pytest.mark.django_db
+def test_malformed_doubt_id_is_404_not_500(seeded, client):
+    from core.models import Pin, User
+
+    client.force_login(User.objects.get(username="sarah"))
+    pin = Pin.objects.filter(layer__isnull=False).first()
+    response = client.post(
+        reverse("action", args=[pin.pk]), {"doubt_id": "abc", "action": "ask", "reason": "x"}
+    )
+    assert response.status_code == 404
