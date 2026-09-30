@@ -224,3 +224,13 @@ def people(request):
     from django.conf import settings
     directory = json.loads((settings.BASE_DIR / "data/people.json").read_text(encoding="utf-8"))
     return render(request, "core/people.html", {"section": "people", "people": directory})
+
+
+@login_required
+@require_POST
+def ai_review(request, pk):
+    from .services.ai_review import review_source
+    source = get_object_or_404(Source, pk=pk)
+    authz.require(authz.can_upload_version(request.user, source))
+    summary = review_source(request.user, source)
+    return render(request, "core/ai_review.html", {"section": "sources", "source": source, "summary": summary})

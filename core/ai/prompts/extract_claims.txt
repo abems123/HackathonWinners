@@ -1,0 +1,1 @@
+Extract at most 30 explicit claims from the supplied passage. Each quote must be a literal, contiguous substring of the passage, without changing whitespace, punctuation or wording. Do not infer policy from metadata. Return the subject and stated value as concise strings. Return no claim when evidence is absent.

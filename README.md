@@ -69,4 +69,8 @@ To rebuild styles on Windows, run `tools/build_css.ps1`; it downloads Tailwind's
 
 The original repository contained an implementation plan referencing a missing product specification. It is preserved in [docs/implementation-plan.md](implementation-plan.md). Conservative gap-filling decisions are in [docs/decisions.md](decisions.md).
 
-Structured Vertex AI integration and offline fixtures are the next feature milestone. Real model cache generation, Aikido before/after screenshots and demo-video submission require the team's external accounts. No completed external scan or model provenance is claimed.
+Structured Vertex AI integration is implemented with three validated tasks: extract claims, compare claims and triage changes. Source owners can use **Check evidence** on a source. Cache mode uses explicitly labelled synthetic fixtures, works offline, and never invents model provenance. Quote validation rejects hallucinated evidence. Invalid results create a manual review without an AI label.
+
+To generate real cached results, configure Application Default Credentials, set `AI_MODE=live`, `GCP_PROJECT`, `GCP_LOCATION` and `GEMINI_MODEL`, then run `python manage.py gen_ai_cache`. Cache keys include task, model, prompt content version and input. Keep `GEMINI_MODEL` set to the same model when serving those results in cache mode. The live provider has no tools and cannot confirm or resolve anything.
+
+Real model cache generation, Aikido before/after screenshots and demo-video submission require the team's external accounts. No completed external scan or model provenance is claimed.

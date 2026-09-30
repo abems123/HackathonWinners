@@ -1,0 +1,1 @@
+Classify the explicit change between the old and new passage. Return VALUE_CHANGED for changed numbers, amounts, percentages or dates; SCOPE_CHANGED for eligibility or jurisdiction changes; WORDING_CHANGED for wording only; UNKNOWN if ambiguous. Never confirm a passage or resolve a review.

@@ -14,6 +14,7 @@ urlpatterns = [
     path("sources/", views.sources, name="sources"),
     path("sources/<int:pk>/", views.source_detail, name="source"),
     path("sources/<int:pk>/upload/", views.upload, name="upload"),
+    path("sources/<int:pk>/evidence-check/", views.ai_review, name="ai_review"),
     path("activity/", views.activity, name="activity"),
     path("people/", views.people, name="people"),
 ]

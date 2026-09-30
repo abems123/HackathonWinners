@@ -32,6 +32,8 @@ class Command(BaseCommand):
                 raise CommandError("Reset is allowed only with DJANGO_DEBUG=True on a demo database.")
             call_command("flush", interactive=False, verbosity=0)
         if Source.objects.exists():
+            from core.ai.cache import load_fixtures
+            load_fixtures()
             self.stdout.write("Seed already loaded; no data changed. Use --reset for a fresh demo.")
             return
         config = yaml.safe_load((ROOT / "seed/seed.yaml").read_text(encoding="utf-8"))
@@ -143,4 +145,6 @@ class Command(BaseCommand):
         layers["Belgium"].team = teams["Payroll BE"]
         layers["Belgium"].save()
         AuditEvent.objects.create(actor=users["system"], action="DEMO_SEEDED", detail="Synthetic corpus loaded. All people and clients are fictional.")
+        from core.ai.cache import load_fixtures
+        load_fixtures()
         self.stdout.write(self.style.SUCCESS(f"Loaded {Source.objects.count()} sources, {Pin.objects.count()} pins and {Client.objects.count()} clients."))

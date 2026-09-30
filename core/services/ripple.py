@@ -39,8 +39,14 @@ def upload_version(user, source, content, effective_from, effective_to=None):
         else:
             summary["modified"] += 1
             kind = "CONTEXT_CHANGED" if result.outcome == "CONTEXT_CHANGED" else "SOURCE_CHANGED"
+            from core.ai.tasks import triage_change
+            triage, provenance = triage_change(pin.quote, result.quote)
+            label = ""
+            if triage:
+                prefix = "Demo AI fixture" if provenance == "fixture" else "AI"
+                label = f"{prefix} (unverified): {triage.label.replace('_', ' ').lower()}"
             create_doubt(pin, kind, f"v{version.number}: passage {result.outcome.lower().replace('_', ' ')}. Review the latest text.",
-                         severity=severity(pin.quote, result.quote), effective_from=effective_from)
+                         severity=severity(pin.quote, result.quote), effective_from=effective_from, ai_label=label)
             for exception in pin.exceptions.filter(superseded_by__isnull=True, excluded=False):
                 create_doubt(exception, "SOURCE_CHANGED", "The base passage changed; check the client-specific exception.",
                              severity=1, effective_from=effective_from)
