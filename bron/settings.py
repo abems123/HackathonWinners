@@ -2,12 +2,30 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
-SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
-DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
+
+
+def env_bool(name, default):
+    value = os.getenv(name)
+    if value is None or not value.strip():
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "").strip()
+if not SECRET_KEY:
+    raise ImproperlyConfigured(
+        "DJANGO_SECRET_KEY is not set. Copy .env.example to .env and set a long random value."
+    )
+DEBUG = env_bool("DJANGO_DEBUG", False)
+# HTTPS-only cookies/redirects follow DEBUG by default. Plain-HTTP local runs with
+# DJANGO_DEBUG=False (e.g. testing gunicorn) must set DJANGO_HTTPS=False, otherwise
+# the browser is redirected to https:// and the login cookies are never sent back.
+HTTPS_ONLY = env_bool("DJANGO_HTTPS", not DEBUG)
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
@@ -85,16 +103,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = HTTPS_ONLY
+CSRF_COOKIE_SECURE = HTTPS_ONLY
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
-SECURE_SSL_REDIRECT = not DEBUG
-SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD = not DEBUG
+SECURE_SSL_REDIRECT = HTTPS_ONLY
+SECURE_HSTS_SECONDS = 31536000 if HTTPS_ONLY else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = HTTPS_ONLY
+SECURE_HSTS_PRELOAD = HTTPS_ONLY
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024
 AI_MODE = os.getenv("AI_MODE", "cache")

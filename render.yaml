@@ -18,6 +18,10 @@ services:
         value: "False"
       - key: AI_MODE
         value: cache
+      # Synthetic demo accounts (password on the login page). Set to "false"
+      # before this service ever holds real data.
+      - key: BRON_SEED_DEMO
+        value: "true"
       - key: DATABASE_URL
         fromDatabase:
           name: hackathon-winners-db
