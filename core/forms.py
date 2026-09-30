@@ -1,4 +1,5 @@
 from django import forms
+from .domain.passage import normalize_newlines
 from .models import Pin, User
 
 
@@ -52,12 +53,13 @@ class UploadForm(forms.Form):
 
     def clean(self):
         values = super().clean()
+        values["content"] = normalize_newlines(values.get("content") or "")
         upload = values.get("file")
         if upload:
             if upload.size > 1024 * 1024 or not upload.name.lower().endswith((".md", ".txt")):
                 raise forms.ValidationError("Upload a Markdown or text file smaller than 1 MB.")
             try:
-                values["content"] = upload.read().decode("utf-8-sig")
+                values["content"] = normalize_newlines(upload.read().decode("utf-8-sig"))
             except UnicodeDecodeError as exc:
                 raise forms.ValidationError("The file must use UTF-8 encoding.") from exc
             if values["content"].startswith("---"):

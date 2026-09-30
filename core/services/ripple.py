@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from core import authz
 from core.audit import record
+from core.domain.passage import normalize_newlines
 from core.engine.invalidate import create_doubt
 from core.engine.reanchor import reanchor
 from core.engine.sensitive import severity
@@ -15,6 +16,7 @@ from core.models import Pin, Source, SourceVersion
 def upload_version(user, source, content, effective_from, effective_to=None):
     source = Source.objects.select_for_update().get(pk=source.pk)
     authz.require(authz.can_upload_version(user, source))
+    content = normalize_newlines(content)
     digest = hashlib.sha256(content.encode()).hexdigest()
     existing = source.versions.filter(content_hash=digest).first()
     summary = {

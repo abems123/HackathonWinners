@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from core import authz
 from core.audit import record
-from core.domain.passage import anchor
+from core.domain.passage import anchor, normalize_newlines
 from core.engine.invalidate import create_doubt
 from core.models import Client, Pin, Source, SourceVersion
 
@@ -32,6 +32,7 @@ def perform(
 ):
     pin = Pin.objects.select_for_update().get(pk=pin.pk)
     authz.require(authz.human(user))
+    quote = normalize_newlines(quote or "")
     if doubt is not None:
         doubt = pin.doubts.select_for_update().get(pk=doubt.pk)
         if doubt.status != "OPEN":

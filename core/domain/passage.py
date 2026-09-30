@@ -2,6 +2,11 @@ import hashlib
 import re
 
 
+def normalize_newlines(text):
+    """Browsers submit textareas with CRLF and Windows files may use CR/CRLF."""
+    return text.replace("\r\n", "\n").replace("\r", "\n")
+
+
 def normalize(text):
     return re.sub(r"\s+", " ", text).strip()
 
